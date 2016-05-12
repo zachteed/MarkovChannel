@@ -11,8 +11,21 @@ extern "C" {
   #include <cblas.h>
 }
 
+#ifdef USE_MKL
+
+#include <mkl.h>
+
+#else  // If use MKL, simply include the MKL header
+
+extern "C" {
+#include <cblas.h>
+}
 #include <math.h>
 
+// Functions that caffe uses but are not present if MKL is not linked.
+
+// A simple way to define the vsl unary functions. The operation should
+// be in the form e.g. y[i] = sqrt(a[i])
 #define DEFINE_VSL_UNARY_FUNC(name, operation) \
   template<typename Dtype> \
   void v##name(const int n, const Dtype* a, Dtype* y) { \
@@ -74,23 +87,77 @@ DEFINE_VSL_BINARY_FUNC(Sub, y[i] = a[i] - b[i]);
 DEFINE_VSL_BINARY_FUNC(Mul, y[i] = a[i] * b[i]);
 DEFINE_VSL_BINARY_FUNC(Div, y[i] = a[i] / b[i]);
 
+// In addition, MKL comes with an additional function axpby that is not present
+// in standard blas. We will simply use a two-step (inefficient, of course) way
+// to mimic that.
+inline void cblas_saxpby(const int N, const float alpha, const float* X,
+                         const int incX, const float beta, float* Y,
+                         const int incY) {
+  cblas_sscal(N, beta, Y, incY);
+  cblas_saxpy(N, alpha, X, incX, Y, incY);
+}
+inline void cblas_daxpby(const int N, const double alpha, const double* X,
+                         const int incX, const double beta, double* Y,
+                         const int incY) {
+  cblas_dscal(N, beta, Y, incY);
+  cblas_daxpy(N, alpha, X, incX, Y, incY);
+}
 
-#endif
-
-#include <stdint.h>
-#include <cmath>
+#endif  // USE_MKL
 
 template <typename Dtype>
 void cpu_gemm(const CBLAS_TRANSPOSE TransA,
-  const CBLAS_TRANSPOSE TransB, const int M, const int N, const int K,
-  const Dtype alpha, const Dtype* A, const Dtype* B, const Dtype beta,
-  Dtype* C);
+    const CBLAS_TRANSPOSE TransB, const int M, const int N, const int K,
+    const Dtype alpha, const Dtype* A, const Dtype* B, const Dtype beta,
+    Dtype* C);
 
 template <typename Dtype>
 void cpu_gemv(const CBLAS_TRANSPOSE TransA, const int M, const int N,
-  const Dtype alpha, const Dtype* A, const Dtype* x, const Dtype beta,
-  Dtype* y);
-  
+    const Dtype alpha, const Dtype* A, const Dtype* x, const Dtype beta,
+    Dtype* y);
+
+template <typename Dtype>
+void cpu_axpy(const int N, const Dtype alpha, const Dtype* X,
+    Dtype* Y);
+
+template <typename Dtype>
+void cpu_axpby(const int N, const Dtype alpha, const Dtype* X,
+    const Dtype beta, Dtype* Y);
+
+template <typename Dtype>
+void cpu_copy(const int N, const Dtype *X, Dtype *Y);
+
+template <typename Dtype>
+void cpu_set(const int N, const Dtype alpha, Dtype *X);
+
+inline void cpu_memset(const size_t N, const int alpha, void* X) {
+  memset(X, alpha, N);  // NOLINT(caffe/alt_fn)
+}
+
+template <typename Dtype>
+void cpu_add_scalar(const int N, const Dtype alpha, Dtype *X);
+
+template <typename Dtype>
+void cpu_scal(const int N, const Dtype alpha, Dtype *X);
+
+template <typename Dtype>
+void cpu_sqr(const int N, const Dtype* a, Dtype* y);
+
+template <typename Dtype>
+void cpu_add(const int N, const Dtype* a, const Dtype* b, Dtype* y);
+
+template <typename Dtype>
+void cpu_sub(const int N, const Dtype* a, const Dtype* b, Dtype* y);
+
+template <typename Dtype>
+void cpu_mul(const int N, const Dtype* a, const Dtype* b, Dtype* y);
+
+template <typename Dtype>
+void cpu_div(const int N, const Dtype* a, const Dtype* b, Dtype* y);
+
+template <typename Dtype>
+void cpu_powx(const int n, const Dtype* a, const Dtype b, Dtype* y);
+
 template <typename Dtype>
 void cpu_exp(const int n, const Dtype* a, Dtype* y);
 
@@ -102,6 +169,8 @@ void cpu_abs(const int n, const Dtype* a, Dtype* y);
 
 template <typename Dtype>
 Dtype cpu_dot(const int n, const Dtype* x, const Dtype* y);
+
+void cpu_scale(const int n, const Dtype alpha, const Dtype *x, Dtype* y);
   
 
 #endif
