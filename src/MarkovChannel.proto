@@ -11,10 +11,10 @@ message SolverParameter {
     ODE = 0;
     EXPM = 1;
   }
-  
+
   optional SolverMode solver_mode = 1 [default = GENETIC_ALGORITHM];
   optional SimulationMode simulation_mode = 2 [default = ODE];
-  
+
   optional int32 max_iters = 3 [default = 10000];
   optional GAParameter ga_param = 4;
   optional SAParameter sa_param = 5;
@@ -55,8 +55,7 @@ message TransitionParameter {
 message ChannelProtocol {
   required string name = 1;
   optional double temperature = 2 [default = 293.0];
-  required string source = 3;
-  repeated ProtocolStep = 4;
+  repeated ProtocolStep step = 4;
 }
 
 message ProtocolStep {
@@ -64,20 +63,17 @@ message ProtocolStep {
   optional doble voltage = 2;
   optional bool conductance = 3;
   optional bool fluorimetry = 4;
-  
+
   enum StepType {
     NONE = 0;
     PEAK = 1;
     TAU = 2;
     TRACE = 3;
   }
-  
-  optional StepType step_type = 5 [default = NONE];
+
+  optional StepType stype = 5 [default = NONE];
   optional bool normalize = 6 [default = true];
   optional double param1 = 7 [default = 0.1];
   optional double param2 = 8 [default = 0.9];
   optional double stepsize = 9 [default = 0.1];
 }
-
-
-  
