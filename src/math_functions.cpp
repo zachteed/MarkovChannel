@@ -1,40 +1,8 @@
 #include "../include/math_functions.hpp"
 
-template<>
-void cpu_gemm<float>(const CBLAS_TRANSPOSE TransA,
-    const CBLAS_TRANSPOSE TransB, const int M, const int N, const int K,
-    const float alpha, const float* A, const float* B, const float beta,
-    float* C) {
-  int lda = (TransA == CblasNoTrans) ? K : M;
-  int ldb = (TransB == CblasNoTrans) ? N : K;
-  cblas_sgemm(CblasRowMajor, TransA, TransB, M, N, K, alpha, A, lda, B,
-      ldb, beta, C, N);
-}
 
-template<>
-void cpu_gemm<double>(const CBLAS_TRANSPOSE TransA,
-    const CBLAS_TRANSPOSE TransB, const int M, const int N, const int K,
-    const double alpha, const double* A, const double* B, const double beta,
-    double* C) {
-  int lda = (TransA == CblasNoTrans) ? K : M;
-  int ldb = (TransB == CblasNoTrans) ? N : K;
-  cblas_dgemm(CblasRowMajor, TransA, TransB, M, N, K, alpha, A, lda, B,
-      ldb, beta, C, N);
-}
+namespace Math {
 
-template <>
-void cpu_gemv<float>(const CBLAS_TRANSPOSE TransA, const int M,
-    const int N, const float alpha, const float* A, const float* x,
-    const float beta, float* y) {
-  cblas_sgemv(CblasRowMajor, TransA, M, N, alpha, A, N, x, 1, beta, y, 1);
-}
-
-template <>
-void cpu_gemv<double>(const CBLAS_TRANSPOSE TransA, const int M,
-    const int N, const double alpha, const double* A, const double* x,
-    const double beta, double* y) {
-  cblas_dgemv(CblasRowMajor, TransA, M, N, alpha, A, N, x, 1, beta, y, 1);
-}
 
 template <>
 void cpu_axpy<float>(const int N, const float alpha, const float* X,
@@ -237,3 +205,4 @@ void cpu_scale<double>(const int n, const double alpha, const double *x,
   cblas_dscal(n, alpha, y, 1);
 }
 
+}

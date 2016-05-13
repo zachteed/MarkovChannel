@@ -1,52 +1,55 @@
-#include "../include/Model.hpp"
+#include "Model.hpp"
 
 
-namespace Model {
+namespace Markov {
 
-  int init_state(Model& m, double vm, double* s)
+  int initial_state(Model& m, double vm, double* s)
   {
-    double[] var = {1, vm}; int N=m.n_states, P=m.prms;
-    Math::dgemv(CblasNoTrans, N, P, 1.0, m.rs, 0.0, var, s);
-    Math::exp(N, s, s); double sum = Math::a_sum(N, s);
-    Math::dscale(N, 1.0/sum, s, s); return 1;
+    double var[] = {1, vm}; int N=m.n_states, P=m.n_prms;
+    cblas_dgemv(CblasRowMajor, CblasNoTrans, N, P,
+      1.0, m.rs, P, var, 1, 0.0, s, 1);
+    Math::vdExp(N, s, s); double sum = cblas_dasum(N, s, 1);
+    cblas_dscal(N, 1.0/sum, s, 1); return 1;
   }
 
   int transition_matrix(Model& m, double vm, double* Q)
   {
 
-    double[] var = {1, vm};
-    int N=m.n_states, E=m.n_edges, P=m.prms;
+    double var[] = {1, vm};
+    int N=m.n_states, E=m.n_edges, P=m.n_prms;
 
-    if(!m.transition_matrix) {
+    if(!m.rates) {
 
-      double* B = (double*) malloc(N*P*std::sizeof(double));
-      double* rates = (double*) malloc(P*N*std::sizeof(double));
+      double* B = (double*) malloc(2*E*P*sizeof(double));
+      double* rates = (double*) malloc(2*E*P*sizeof(double));
+      m.rates = rates; double *x1, *x2, *x3, *x4;
 
       for (size_t i=0; i<E; i++) {
         int e1=m.edges[i].V1, e2=m.edges[i].V2;
-        Math::sub(P, e1, e2, B[i*P]);
+        Math::vdSub(P, &m.rs[e2*P], &m.rs[e1*P], &B[i*P]);
       }
-      std::memcpy(B[P*E], m.rk, P*E);
+      std::memcpy(&B[P*E], m.rk, P*E*sizeof(double));
 
       for (size_t i=0; i<E; i++) {
-        Math::sub(P, B[i*P], B[P*(E+i)], rates[i*P]);
-        Math::add(P, B[i*P], B[P*(E+i)], rates[i*P]);
+        Math::vdSub(P, &B[P*(i+E)], &B[P*i], &rates[P*2*i]);
+        Math::vdAdd(P, &B[P*(i+E)], &B[P*i], &rates[P*(2*i+1)]);
       }
-      Math::dscale(2*E*P, .5, rates, rates);
-
-      double* t_matrix = (double *) calloc(P*N*N, sizeof(double));
-      m.transition_matrix = t_matrix; double *x1,*x2;
-
-      for (size_t i=0; i<E; i++) {
-        int e1 = m.edges[i].V1, e2 = m.edges[i].V2;
-        x1=t_matrix[P*(N*e1+e1)]; x2=t_matrix[P*(N*e2+e1)]
-        Math::sub(P, x1, R[e1], x1);
-        Math::add(P, x2, R[e1], x2);
-      }
-      std::free(rates);std::free(B);
+      cblas_dscal(2*E*P, .5, rates, 1); free(B);
     }
 
-    Math::dgemv(CblasNoTrans, N, P, 1.0, m.rs, 0.0, var, Q)
-    std::free(rates); std::free(B); return 1;
+    double* expr = (double*) malloc(2*E*sizeof(double));
+    cblas_dgemv(CblasRowMajor, CblasNoTrans, 2*E, P, 1.0,
+        m.rates, P, var, 1, 0.0, expr, 1);
+    Math::vdExp(2*E, expr, expr);
+
+    for(int i = 0; i < 2*E; i++) std::cout<<expr[i]<<std::endl;
+
+    memset(Q, 0, N*N*sizeof(double));
+    for (size_t i=0; i<E; i++) {
+      int e1 = m.edges[i].V1; int e2 = m.edges[i].V2;
+      Q[N*e1+e1] -= expr[2*i]; Q[N*e2+e2] -= expr[2*i+1];
+      Q[N*e2+e1] += expr[2*i]; Q[N*e1+e2] += expr[2*i+1];
+    }
+    free(expr); return 1;
   }
 }

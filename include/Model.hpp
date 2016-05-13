@@ -1,27 +1,35 @@
 #ifndef MODEL_HPP_
 #define MODEL_HPP_
 
-#include <stdio>
 #include <string>
-#include <math>
 #include <vector>
+#include <cstdlib>
+#include <cstdint>
+#include <cstring>
+#include <cblas.h>
+#include <iostream>
 
-struct Edge {
-  int V1, V2;
-}
+#include "math_functions.hpp"
 
-struct Model {
-  std::vector<Edge> edges;
-  double* rs, rk, G, F;
-  double* transition_matrix;
-  int n_states, n_edges;
-}
 
-namespace Model {
+namespace Markov {
 
-  init_state(Model&, double vm);
+  struct Edge {
+    int V1, V2;
+  };
 
-  transition_matrix(Model&, double vm);
+  struct Model {
+    std::vector<Edge> edges;
+    double *rs, *rk, *G, *F;
+    double *rates;
+    int n_states, n_edges, n_prms;
+  };
+
+  int initial_state(Model& m, double vm, double* s);
+
+  int transition_matrix(Model& m, double vm, double* Q);
+
+  void neighbors();
 
 }
 
