@@ -10,19 +10,17 @@
 #include <iostream>
 
 #include "math_functions.hpp"
+#include "graph_functions.hpp"
 
 
-namespace Markov {
+namespace Model {
 
-  struct Edge {
-    int V1, V2;
-  };
+  static MarkovChannel::ModelParameter prms;
 
-  struct Model {
-    std::vector<Edge> edges;
-    double *rs, *rk, *G, *F;
-    double *rates;
-    int n_states, n_edges, n_prms;
+  struct MarkovModel {
+    Graph::Graph graph;
+    double *rs, *rk;
+    double *G, *F, *rates;
   };
 
   int initial_state(Model& m, double vm, double* s);

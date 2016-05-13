@@ -7,9 +7,8 @@ namespace Markov {
   {
     double var[] = {1, vm}; int N=m.n_states, P=m.n_prms;
     cblas_dgemv(CblasRowMajor, CblasNoTrans, N, P,
-      1.0, m.rs, P, var, 1, 0.0, s, 1);
-    Math::vdExp(N, s, s); double sum = cblas_dasum(N, s, 1);
-    cblas_dscal(N, 1.0/sum, s, 1); return 1;
+        1.0, m.rs, P, var, 1, 0.0, s, 1);
+    cblas_dscal(N, 1.0/cblas_dasum(N, s, 1), s, 1); return 1;
   }
 
   int transition_matrix(Model& m, double vm, double* Q)

@@ -2,54 +2,54 @@ syntax = "proto2"
 
 package MarkovChannel;
 
-message SolverParameter {
-  enum SolverMode {
-    GENETIC_ALGORITHM = 0;
-    SIMULATED_ANNEALING = 1;
-  }
-  enum SimulationMode {
-    ODE = 0;
-    EXPM = 1;
-  }
-
-  optional SolverMode solver_mode = 1 [default = GENETIC_ALGORITHM];
-  optional SimulationMode simulation_mode = 2 [default = ODE];
-
-  optional int32 max_iters = 3 [default = 10000];
-  optional GAParameter ga_param = 4;
-  optional SAParameter sa_param = 5;
-}
-
-messsage GAParameter {
-  enum SelectionMode {
-    TOURNAMENT = 0;
-    PROPORTIONATE = 1;
-    STOCHASTIC = 2;
-    UNIFORM = 3;
-    ROULETTE = 4;
-    RANK = 5;
-  }
-  optional int32 n_subpopulations = 1 [default = 8];
-  optional int32 population_size = 2 [default = 100];
-  optional double migration_rate = 3 [default = 0.01];
-  optional double reproduction_rate = 4 [default = .5];
-  optional SelectionMode selection_mode = 5 [default=TOURNAMENT];
-  optional TransitionParameter mutation_param = 6;
-}
-
-message SAParameter {
-  optional int32 k_max = 1 [default = 100];
-  optional double gamma = 2 [default = 0.01];
-  optional TransitionParameter transition_param = 3;
-}
-
-message TransitionParameter {
-  optional double add_state = 1;
-  optional double add_edge = 2;
-  optional double remove_edge = 3;
-  optional double shift_params = 4;
-  optional bool fixed_model = 5 [default = false];
-}
+# message SolverParameter {
+#   enum SolverMode {
+#     GENETIC_ALGORITHM = 0;
+#     SIMULATED_ANNEALING = 1;
+#   }
+#   enum SimulationMode {
+#     ODE = 0;
+#     EXPM = 1;
+#   }
+#
+#   optional SolverMode solver_mode = 1 [default = GENETIC_ALGORITHM];
+#   optional SimulationMode simulation_mode = 2 [default = ODE];
+#
+#   optional int32 max_iters = 3 [default = 10000];
+#   optional GAParameter ga_param = 4;
+#   optional SAParameter sa_param = 5;
+# }
+#
+# messsage GAParameter {
+#   enum SelectionMode {
+#     TOURNAMENT = 0;
+#     PROPORTIONATE = 1;
+#     STOCHASTIC = 2;
+#     UNIFORM = 3;
+#     ROULETTE = 4;
+#     RANK = 5;
+#   }
+#   optional int32 n_subpopulations = 1 [default = 8];
+#   optional int32 population_size = 2 [default = 100];
+#   optional double migration_rate = 3 [default = 0.01];
+#   optional double reproduction_rate = 4 [default = .5];
+#   optional SelectionMode selection_mode = 5 [default=TOURNAMENT];
+#   optional TransitionParameter mutation_param = 6;
+# }
+#
+# message SAParameter {
+#   optional int32 k_max = 1 [default = 100];
+#   optional double gamma = 2 [default = 0.01];
+#   optional TransitionParameter transition_param = 3;
+# }
+#
+# message TransitionParameter {
+#   optional double add_state = 1;
+#   optional double add_edge = 2;
+#   optional double remove_edge = 3;
+#   optional double shift_params = 4;
+#   optional bool fixed_model = 5 [default = false];
+# }
 
 
 message ChannelProtocol {
@@ -59,8 +59,9 @@ message ChannelProtocol {
 }
 
 message ProtocolStep {
-  optional double time = 1;
-  optional doble voltage = 2;
+  optional double dt = 1;
+  optional doble vm = 2;
+
   optional bool conductance = 3;
   optional bool fluorimetry = 4;
 
@@ -73,7 +74,7 @@ message ProtocolStep {
 
   optional StepType stype = 5 [default = NONE];
   optional bool normalize = 6 [default = true];
-  optional double param1 = 7 [default = 0.1];
-  optional double param2 = 8 [default = 0.9];
+  optional double prm1 = 7 [default = 0.1];
+  optional double prm2 = 8 [default = 0.9];
   optional double stepsize = 9 [default = 0.1];
 }
