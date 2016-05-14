@@ -4,28 +4,24 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
+#include <iostream>
 
 #include "math_functions.hpp"
 
 namespace Graph {
 
   struct Edge {
-    Edge(int v1, int v2) : V1(v1), V2(v2) {}
+    Edge(int v1, int v2) : V1(v1), V2(v2) {};
     int V1, V2;
   };
 
   struct Graph {
+    Graph() : E(0), N(0) {};
     std::vector<Edge> edges;
     int E, N;
   }
 
   int random_connected_graph(int N, Graph& G, double p);
-
-  int add_edge(Graph& G, bool force);
-
-  int add_node(Graph& G);
-
-  int rm_edge(Graph& G, int*& idx);
 
   int adj_list(Graph& G, std::vector<std::vector<int> >& lst);
 
@@ -36,7 +32,15 @@ namespace Graph {
 
   int connect(Graph& G);
 
-  int
+  int add_edge(Graph& G, bool force);
+
+  int add_node(Graph& G);
+
+  int rm_edge(Graph& G, int*& idx, bool reconnect);
+
+  int rm_node(Graph& G, int*& idx, bool reconnect);
+
+  std::ostream& operator<< (std::ostream& os, const Graph& G);
 
 }
 
