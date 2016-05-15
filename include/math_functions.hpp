@@ -83,16 +83,20 @@ namespace Math {
 
 namespace Math {
 
-  inline double rng_uniform() {
-    return 0;
-  }
+  int init_stream(const int seed);
 
-  inline double rng_gaussian() {
-    return 0;
-  }
+  double rng_gaussian(double mu=0.0, double sig=1.0);
 
-  extern VSLStreamStatePtr stream;
-  inline void init() {vslNewStream( &stream, VSL_BRNG_MT19937, 777 );}
+  double rng_uniform(double a=0.0, double b=1.0);
+
+  int rng_gaussian(int N, double* r, double mu=0.0, double sig=1.0);
+
+  int rng_uniform(int N, double* r, double a=0.0, double b=0.0);
+
+  int rng_int(int a, int b);
+
+  int rng_int(int N, int* r, int a, int b);
+
 }
 
 #endif
