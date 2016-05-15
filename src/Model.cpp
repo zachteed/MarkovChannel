@@ -51,4 +51,42 @@ namespace Markov {
     }
     free(expr); return 1;
   }
+
+  // int add_edge(Model& m)
+  // {
+  //   if (prms.has_add_edge() && Math.rng_uniform() < prms.add_edge) {
+  //     int e0 = m.E; Graph::add_edge(m.graph, false);
+  //     if (m.E > e0) {
+  //       double* rs =
+  //     }
+  //   }
+  // }
+
+  int add_node(Model& m) {}
+
+  int rm_edge(Model& m) {}
+
+  int rm_node(Model& m) {}
+
+  int neighbor(Model& m, Model& n, int n=1) {
+
+    n.graph = m.graph;
+    int* idx;
+
+    if (prms.has_add_edge() && Math.rng_uniform() < prms.add_edge) {
+      Graph::add_edge(n.graph, false);
+    }
+
+    if (prms.has_add_node() && Math.rng_uniform() < prms.add_node) {
+      Graph::add_node(n.graph, false);
+    }
+
+    if (prms.has_rm_edge() && Math.rng_uniform() < prms.rm_edge) {
+      Graph::rm_edge(n.graph, idx, true);
+    }
+
+    if (prms.has_rm_node() && Math.rng_uniform() < prms.rm_node) {
+      Graph::rm_node(n.graph, idx, true);
+    }
+  }
 }

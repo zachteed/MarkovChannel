@@ -15,9 +15,9 @@
 
 namespace Model {
 
-  static MarkovChannel::ModelParameter prms;
+  MarkovChannel::ModelParameter prms;
 
-  struct MarkovModel {
+  struct Model {
     Graph::Graph graph;
     double *rs, *rk;
     double *G, *F, *rates;
@@ -27,7 +27,9 @@ namespace Model {
 
   int transition_matrix(Model& m, double vm, double* Q);
 
-  void neighbors();
+  int neighbor(Model& m, int n=1);
+
+  int mutate(Model& m, int n=1);
 
 }
 

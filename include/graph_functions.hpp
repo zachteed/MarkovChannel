@@ -17,6 +17,9 @@ namespace Graph {
 
   struct Graph {
     Graph() : E(0), N(0) {};
+    Graph(int n, double p=0.2) : E(0), N(n) {
+      random_connected_graph(n, *this, p);
+    }
     std::vector<Edge> edges;
     int E, N;
   }
