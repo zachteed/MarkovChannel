@@ -1,0 +1,15 @@
+name: "inac"
+source: "data/recordings/inac.txt"
+v0: -120.0
+
+step {
+  dt: 200.0
+  stype: PEAK
+}
+
+step {
+  dt: 5.0
+  stype: PEAK
+  normalize: true
+  stepsize: 0.1
+}

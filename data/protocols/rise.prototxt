@@ -1,0 +1,12 @@
+name: "rise"
+source: "data/recordings/rise.txt"
+v0: -120.0
+
+step {
+  dt: 5.0
+  stype: TAU
+  normalize: true
+  prm1: 0.1
+  prm2: 0.9
+  stepsize: 0.1
+}

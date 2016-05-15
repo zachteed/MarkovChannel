@@ -1,10 +1,10 @@
 #ifndef MATH_FUNCTIONS_HPP_
 #define MATH_FUNCTIONS_HPP_
 
-
 #ifdef USE_MKL
 
 #include <mkl.h>
+#include "mkl_vsl.h"
 
 #else
 
@@ -79,5 +79,20 @@ namespace Math {
 }
 
 #endif  // USE_MKL
+
+
+namespace Math {
+
+  inline double rng_uniform() {
+    return 0;
+  }
+
+  inline double rng_gaussian() {
+    return 0;
+  }
+
+  extern VSLStreamStatePtr stream;
+  inline void init() {vslNewStream( &stream, VSL_BRNG_MT19937, 777 );}
+}
 
 #endif
