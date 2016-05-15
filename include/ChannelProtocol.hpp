@@ -11,12 +11,12 @@
 
 typedef std::vector<std::vector<double> > dmatrix_t;
 
-struct protocol {
-  protocol(std::string& prototxt);
-  MarkovChannel::ChannelProtocol params;
+struct ChannelProtocol {
+  ChannelProtocol(std::string& prototxt);
+  MarkovChannel::ProtocolParameter params;
   dmatrix_t data;
 };
 
-std::ostream& operator<<(std::ostream& os, const protocol& proto);
+std::ostream& operator<<(std::ostream& os, const ChannelProtocol& proto);
 
 #endif

@@ -2,10 +2,12 @@ syntax = "proto2";
 
 package MarkovChannel;
 
-message ChannelProtocol {
+message ProtocolParameter {
   required string name = 1;
-  optional double temperature = 2 [default = 293.0];
-  repeated ProtocolStep step = 4;
+  optional string source = 2;
+  optional double v0 = 3 [default = -120];
+  optional double temperature = 4 [default = 293.0];
+  repeated ProtocolStep step = 5;
 }
 
 message ProtocolStep {

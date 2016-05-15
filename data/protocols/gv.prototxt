@@ -1,5 +1,5 @@
 name: "gv_wt"
-source: "data/recordings/gv.txt"
+source: "data/data/gv.txt"
 v0: -120.0
 
 step {

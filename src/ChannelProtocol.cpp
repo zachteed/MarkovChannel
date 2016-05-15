@@ -1,14 +1,28 @@
 #include "ChannelProtocol.hpp"
+#include <fcntl.h>
+#include <google/protobuf/io/coded_stream.h>
+#include <google/protobuf/io/zero_copy_stream_impl.h>
+#include <google/protobuf/text_format.h>
+
+using namespace std;
+
+using google::protobuf::io::FileInputStream;
+using google::protobuf::io::FileOutputStream;
+using google::protobuf::io::ZeroCopyInputStream;
+using google::protobuf::io::CodedInputStream;
+using google::protobuf::io::ZeroCopyOutputStream;
+using google::protobuf::io::CodedOutputStream;
+using google::protobuf::Message;
 
 
-
-protocol::protocol(std::string& prototxt)
+ChannelProtocol::ChannelProtocol(std::string& prototxt)
 {
-  std::fstream input(prototxt, ios::in | ios::binary);
-  params = MarkovChannel::ChannelProtocol.ParseFromIstream(&input);
+  int fd = open(prototxt.c_str(), O_RDONLY);
+  FileInputStream* input = new FileInputStream(fd);
+  google::protobuf::TextFormat::Parse(input, &params);
 
   std::ifstream datfile;
-  datfile.open(proto.source);
+  datfile.open(params.source().c_str());
 
   double x; std:string line;
   data = dmatrix_t();
@@ -19,11 +33,12 @@ protocol::protocol(std::string& prototxt)
     std::istringstream iss(line);
     while (iss>>x) {tmp.push_back(x);}
   }
+  delete input;
 }
 
-std::ostream& operator<<(std::ostream& os, const protocol& proto)
+std::ostream& operator<<(std::ostream& os, const ChannelProtocol& proto)
 {
-  os << proto.params.name << "\n";
+  os << proto.params.name() << "\n";
   for (int i = 0; i < proto.data.size(); i++) {
     for (int j = 0; j < proto.data[i].size(); j++) {
       os << proto.data[i][j] << "\t";
