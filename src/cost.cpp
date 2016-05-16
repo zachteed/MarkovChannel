@@ -10,7 +10,7 @@ inline void jac_mat(int *n, double *t, double *y, double *a);
 
 inline double peak(int n, double* x, double& peak)
 {
-  int idx; Math::idamax(n, x, &idx);
+  int idx; cblas_idamax(n, x, &idx);
   peak = x[idx]; return 1;
 }
 
