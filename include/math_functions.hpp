@@ -97,6 +97,12 @@ namespace Math {
 
   int rng_int(int N, int* r, int a, int b);
 
+  inline int* range(int idx1, int idx2) {
+    int* idxs = (int*) malloc((idx2 - idx1)*sizeof(int));
+    for(int i=idx1; i<idx2; i++) idxs[i] = i;
+    return idxs;
+  }
+
 }
 
 #endif

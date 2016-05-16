@@ -17,14 +17,12 @@ namespace Graph {
 
   struct Graph {
     Graph() : E(0), N(0) {};
-    Graph(int n, double p=0.2) : E(0), N(n) {
-      random_connected_graph(n, *this, p);
-    }
+    Graph(int n, double p=0.2);
     std::vector<Edge> edges;
     int E, N;
-  }
+  };
 
-  int random_connected_graph(int N, Graph& G, double p);
+  int random_connected_graph(int N, Graph& G, double p=0.2);
 
   int adj_list(Graph& G, std::vector<std::vector<int> >& lst);
 
@@ -35,13 +33,13 @@ namespace Graph {
 
   int connect(Graph& G);
 
-  int add_edge(Graph& G, bool force);
+  int add_edge(Graph& G, bool force=false);
 
   int add_node(Graph& G);
 
-  int rm_edge(Graph& G, int*& idx, bool reconnect);
+  int rm_edge(Graph& G, int* idx, bool reconnect=true);
 
-  int rm_node(Graph& G, int*& idx, bool reconnect);
+  int rm_node(Graph& G, int* idx, bool reconnect=true);
 
   std::ostream& operator<< (std::ostream& os, const Graph& G);
 
