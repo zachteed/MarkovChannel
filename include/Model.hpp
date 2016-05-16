@@ -18,18 +18,23 @@ namespace Model {
   MarkovChannel::ModelParameter prms;
 
   struct Model {
-    Graph::Graph graph;
+    Model(int N, double p=0.2);
+    ~Model();
+
+    Graph::Graph G;
+
     double *rs, *rk;
-    double *G, *F, *rates;
+    double *C, *F;
+    double *r_vec;
   };
-
-  int initial_state(Model& m, double vm, double* s);
-
-  int transition_matrix(Model& m, double vm, double* Q);
 
   int neighbor(Model& m, int n=1);
 
   int mutate(Model& m, int n=1);
+
+  double* initial_state(Model& m, double vm, double* s);
+
+  double* transition_matrix(Model& m, double vm, double* Q);
 
 }
 
