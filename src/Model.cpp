@@ -1,10 +1,11 @@
 #include "Model.hpp"
 
 
-int Model::Model::count = 0;
 
 namespace Model {
 
+  int Model::Model::count = 0;
+  MarkovChannel::ModelParameter prms;
 
   Model::Model(int N, double p)
   {
@@ -13,6 +14,7 @@ namespace Model {
 
     this->rs = (double*) malloc(P*(G.N+G.E)*sizeof(double));
     this->rk = this->rs + P*G.N;
+    std::cout << prms.mu() << '\t' << prms.std() << std::endl;
     Math::rng_gaussian((G.N+G.E)*P, rs, prms.mu(), prms.std());
 
     this->C = (double*) calloc(G.N, sizeof(double));
@@ -207,13 +209,16 @@ namespace Model {
 
   std::ostream& operator<<(std::ostream& os, const Model& m)
   {
-    int N=m.G.N, E=m.G.E, P=prms.n_prms();
+    int N=m.G.N, E=m.G.E, P=prms.n_prms(), n;
     os << "Model Id:\t" << m.id << "\n" << m.G;
+
+    char buffer[12];
 
     os << "\n~RS~" << std::endl;
     for (int i=0; i<N; i++) {
       for (int j=0; j<P; j++) {
-        os << m.rs[i*P+j] << "\t";
+        n = sprintf(buffer, "%8.4f\t", m.rs[i*P+j]);
+        os << std::string(buffer, n);
       }
       os << "\n";
     }
@@ -221,7 +226,8 @@ namespace Model {
     os << "\n~RK~" << std::endl;
     for (int i=0; i<N; i++) {
       for (int j=0; j<P; j++) {
-        os << m.rk[i*P+j] << "\t";
+        sprintf(buffer, "%8.4f\t", m.rk[i*P+j]);
+        os << std::string(buffer, n);
       }
       os << "\n";
     }

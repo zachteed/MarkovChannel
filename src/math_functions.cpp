@@ -24,22 +24,22 @@ namespace Math {
     return *r;
   }
 
-  int rng_gaussian(int N, double *r, double mu, double sig) {
-    return vdRngGaussian(METHOD_GAUSSIAN, stream, 1, r, mu, sig);
-  }
-
-  int rng_uniform(int N, double *r, double a, double b) {
-    return vdRngUniform(METHOD_UNIFORM, stream, 1, r, a, b);
-  }
-
   int rng_int(int a, int b) {
     int r[1];
     viRngUniform(METHOD_UNIFORM, stream, 1, r, a, b);
     return *r;
   }
 
+  int rng_gaussian(int N, double *r, double mu, double sig) {
+    return vdRngGaussian(METHOD_GAUSSIAN, stream, N, r, mu, sig);
+  }
+
+  int rng_uniform(int N, double *r, double a, double b) {
+    return vdRngUniform(METHOD_UNIFORM, stream, N, r, a, b);
+  }
+
   int rng_int(int N, int *r, int a, int b) {
-    return viRngUniform(METHOD_UNIFORM, stream, 1, r, a, b);
+    return viRngUniform(METHOD_UNIFORM, stream, N, r, a, b);
   }
 
 }

@@ -1,15 +1,45 @@
 #include "Model.hpp"
 #include "math_functions.hpp"
+#include "MarkovChannel.pb.h"
 
+#include <fstream>
 #include <iostream>
 #include <vector>
 #include <cstdlib>
 
+#include <fcntl.h>
+#include <google/protobuf/io/coded_stream.h>
+#include <google/protobuf/io/zero_copy_stream_impl.h>
+#include <google/protobuf/text_format.h>
+
 using namespace std;
+using google::protobuf::io::FileInputStream;
+using google::protobuf::io::FileOutputStream;
+using google::protobuf::io::ZeroCopyInputStream;
+using google::protobuf::io::CodedInputStream;
+using google::protobuf::io::ZeroCopyOutputStream;
+using google::protobuf::io::CodedOutputStream;
+using google::protobuf::Message;
+
 
 int main(int argc, char* argv[]) {
 
-  // Math::init_stream(time(NULL));
+  Math::init_stream(time(NULL));
+
+  int fd = open(argv[1], O_RDONLY);
+  FileInputStream* input = new FileInputStream(fd);
+
+  MarkovChannel::SolverParameter solver_param;
+  google::protobuf::TextFormat::Parse(input, &solver_param);
+  Model::prms = solver_param.model_param(); delete input;
+
+  Model::Model model(5);
+  cout << model << endl;
+
+  return 1;
+}
+
+
 
   // std::vector<Edge> edges;
   // edges.push_back({0, 1});
@@ -48,11 +78,3 @@ int main(int argc, char* argv[]) {
   //   }
   //   std::cout << std::endl;
   // }
-
-
-  Model::Model model(5);
-  cout << model << endl;
-
-
-  return 1;
-}

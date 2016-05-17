@@ -1,0 +1,19 @@
+solver_mode: SIMULATED_ANNEALING
+simulation_mode: ODE
+
+model_param {
+
+  min_states: 3
+  max_states: 10
+  mu: 0
+  std: 2
+
+  mutation {
+    add_edge: 0.1
+    add_node: 0.1
+    rm_edge: 0.1
+    rm_node: 0.1
+    std: 0.2
+  }
+
+}

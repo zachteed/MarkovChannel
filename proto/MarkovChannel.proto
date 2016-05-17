@@ -49,6 +49,8 @@ message SolverParameter {
   optional int32 max_iters = 4 [default = 10000];
   optional GAParameter ga_param = 5;
   optional SAParameter sa_param = 6;
+
+  optional string protocols = 7;
 }
 
 message ModelParameter {

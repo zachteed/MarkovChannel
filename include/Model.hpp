@@ -4,18 +4,19 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <vector>
 #include <cstdlib>
 #include <cstring>
+#include <stdio.h>
 #include <mkl.h>
 
 #include "math_functions.hpp"
 #include "graph_functions.hpp"
 #include "MarkovChannel.pb.h"
 
+
 namespace Model {
 
-  MarkovChannel::ModelParameter prms;
+  extern MarkovChannel::ModelParameter prms;
 
   struct Model {
 
