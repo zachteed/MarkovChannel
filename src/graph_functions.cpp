@@ -196,7 +196,6 @@ namespace Graph {
     idx[rnd] = idx[e0-1];
     idx[e0-1] = -1;
 
-    idx[G.E-1] = rnd; idx[rnd] = -1;
     G.edges.pop_back(); G.E--;
 
     // reconnect graph if broken
@@ -215,6 +214,7 @@ namespace Graph {
       return 0;
     }
 
+
     int e0 = G.E, n0 = G.N;
     int rnd = Math::rng_int(0, G.N);
 
@@ -229,21 +229,23 @@ namespace Graph {
     int i, index = 0;
     std::vector<Edge> tmp;
 
-    for (int i=0; i<G.E; i++) {
+    for (int i=0; i<e0; i++) {
       Edge& e = G.edges[i];
       if (!(e.V1 == rnd || e.V2 == rnd)) {
 
         if (e.V1 > rnd) e.V1--;
         if (e.V2 > rnd) e.V2--;
 
-        tmp.push_back(G.edges[i]);
-        eidx[index++] = t_eidx[i];
+        tmp.push_back(e);
+        eidx[index] = t_eidx[i];
+        index++;
       }
     }
     G.edges = tmp; G.E = tmp.size();
 
-    for (int i=index; index<G.E; i++) {
-      eidx[index] = -1;
+
+    for (int i=index; i<e0; i++) {
+      eidx[i] = -1;
     }
 
     // reconnect graph if broken

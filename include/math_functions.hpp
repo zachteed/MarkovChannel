@@ -91,7 +91,7 @@ namespace Math {
 
   int rng_gaussian(int N, double* r, double mu=0.0, double sig=1.0);
 
-  int rng_uniform(int N, double* r, double a=0.0, double b=0.0);
+  int rng_uniform(int N, double* r, double a=0.0, double b=1.0);
 
   int rng_int(int a, int b);
 

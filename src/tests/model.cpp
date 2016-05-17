@@ -33,8 +33,14 @@ int main(int argc, char* argv[]) {
   google::protobuf::TextFormat::Parse(input, &solver_param);
   Model::prms = solver_param.model_param(); delete input;
 
+
+  Model::Model* n;
+
   Model::Model model(5);
-  cout << model << endl;
+  n = Model::neighbor(model);
+  delete n;
+
+
 
   return 1;
 }

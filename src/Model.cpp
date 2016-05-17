@@ -14,7 +14,6 @@ namespace Model {
 
     this->rs = (double*) malloc(P*(G.N+G.E)*sizeof(double));
     this->rk = this->rs + P*G.N;
-    std::cout << prms.mu() << '\t' << prms.std() << std::endl;
     Math::rng_gaussian((G.N+G.E)*P, rs, prms.mu(), prms.std());
 
     this->C = (double*) calloc(G.N, sizeof(double));
@@ -115,6 +114,7 @@ namespace Model {
     int P = prms.n_prms();
 
     n->rs = (double*) malloc(P*(N+E)*sizeof(double));
+    n->C = (double*) calloc(N, sizeof(double));
     n->rk = n->rs + P*N;
 
     Math::rng_gaussian((N+E)*P, n->rs, prms.mu(), prms.std());
@@ -123,27 +123,32 @@ namespace Model {
     eidx = &edge_idx[0];
 
     for (int i=0; i<N; i++) {
-      if (nidx[i] > 0)
+      if (nidx[i] >= 0) {
         memcpy(&n->rs[P*i], &m.rs[P*nidx[i]], P*sizeof(double));
+        n->C[i] = m.C[nidx[i]];
+      }
     }
     for (int i=0; i<E; i++) {
-      if (eidx[i] > 0) {
+      if (eidx[i] >= 0) {
         memcpy(&n->rk[P*i], &m.rk[P*eidx[i]], P*sizeof(double));
       }
     }
 
-    int* mask = (int*) malloc(N+E*sizeof(int));
-    double* mult = (double*) malloc(N+E*sizeof(double));
-    double* r = (double*) malloc(N+E*sizeof(double));
-    for(int i=0; i<N+E; i++) *(mult++) = *(mask++);
+    double* mult = (double*) malloc(P*(N+E)*sizeof(double));
+    double* r = (double*) malloc(P*(N+E)*sizeof(double));
 
-    Math::rng_int(N+E, mask, 0, 2);
-    Math::rng_gaussian(N+E, r, 0, mut.std());
+    double prob = mut.update_prob();
+    double sig = mut.update_std();
 
-    vdMul(N+E, r, mult, r);
+    Math::rng_uniform(P*(N+E), mult);
+    Math::rng_gaussian(P*(N+E), r, 0, sig);
+
+    for(int i=0; i<P*(N+E); i++)
+      r[i] = (mult[i] < prob) ? r[i] : 0;
+
     vdAdd(N+E, r, n->rs, n->rs);
 
-    free(mask); free(mult); free(r);
+    free(mult); free(r);
     return n;
   }
 
@@ -224,7 +229,7 @@ namespace Model {
     }
 
     os << "\n~RK~" << std::endl;
-    for (int i=0; i<N; i++) {
+    for (int i=0; i<E; i++) {
       for (int j=0; j<P; j++) {
         sprintf(buffer, "%8.4f\t", m.rk[i*P+j]);
         os << std::string(buffer, n);

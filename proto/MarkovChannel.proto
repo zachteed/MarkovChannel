@@ -69,7 +69,9 @@ message MutationParameter {
   optional double add_node = 2;
   optional double rm_edge = 3;
   optional double rm_node = 4;
-  optional double std = 5 [default = 0.1];
+
+  optional double update_std = 5 [default = 0.1];
+  optional double update_prob = 6 [default = 0.2];
 }
 
 message GAParameter {

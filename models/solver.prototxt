@@ -13,7 +13,8 @@ model_param {
     add_node: 0.1
     rm_edge: 0.1
     rm_node: 0.1
-    std: 0.2
+    update_std: 0.2
+    update_prob: 0.2
   }
 
 }
