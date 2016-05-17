@@ -35,11 +35,11 @@ namespace Graph {
 
   int add_edge(Graph& G, bool force=false);
 
-  int add_node(Graph& G);
+  int add_node(Graph& G, bool force=false);
 
-  int rm_edge(Graph& G, int* idx, bool reconnect=true);
+  int rm_edge(Graph& G, int*& idx, bool reconnect=true);
 
-  int rm_node(Graph& G, int* idx, bool reconnect=true);
+  int rm_node(Graph& G, int*& nidx, int*& eidx, bool reconnect=true);
 
   std::ostream& operator<< (std::ostream& os, const Graph& G);
 

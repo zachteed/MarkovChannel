@@ -137,7 +137,7 @@ namespace Graph {
     free(c_found); return 1;
   }
 
-  int add_edge(Graph& G, bool force)
+  int add_edge(Graph& G, int* idx, bool force)
   {
     if (!force) {
       int r1 = Math::rng_int(0, G.N);
@@ -177,20 +177,20 @@ namespace Graph {
     return 0;
   }
 
-  int add_node(Graph& G) {
+  int add_node(Graph& G, bool force) {
     int rnd = Math::rng_int(0, G.N);
     G.edges.push_back(Edge(rnd, G.N));
     G.E++; G.N++; return 1;
   }
 
-  int rm_edge(Graph& G, int* idx, bool reconnect) {
+  int rm_edge(Graph& G, int*& idx, bool reconnect) {
 
     // make sure there is an edge to remove
     if (G.E <= 1) {
       return 0;
     }
 
-    int rnd = Math::rng_int(0, G.E);
+    int e0=G.E, rnd = Math::rng_int(0, G.E);
     G.edges[rnd] = G.edges.back();
 
     idx[G.E-1] = rnd; idx[rnd] = -1;
@@ -200,16 +200,24 @@ namespace Graph {
     if (reconnect) {
       connect(G);
     }
-    return 1;
+
+    int* tmp_idx = (int*) malloc(G.E*sizeof(int));
+    memcpy(tmp_idx, idx, e0*sizeof(int));
+
+    for (int i=e0; i<G.E; i++) tmp_idx[i]=-1;
+    tmp_idx[rnd] = idx[e0-1]; tmp_idx[e0-1]=-1;
+    free(idx); idx = tmp_idx; return 1;
+
   }
 
-  int rm_node(Graph& G, int* idx, bool reconnect) {
+  int rm_node(Graph& G, int*& nidx, int*& eidx, bool reconnect) {
 
     // make sure there is an edge to remove
     if (G.N <= 1) {
       return 0;
     }
 
+    int e0 = G.E, n0 = G.N;
     int rnd = Math::rng_int(0, G.N);
     std::vector<Edge> tmp;
 
@@ -231,7 +239,11 @@ namespace Graph {
     if (reconnect) {
       connect(G);
     }
-    return 1;
+
+    int *t_nidx = (int*) malloc(G.N*sizeof(int));
+    int *t_eidx = (int*) malloc(G.E*sizeof(int));
+
+    return rnd;
   }
 
   std::ostream& operator<< (std::ostream& os, const Graph& G)

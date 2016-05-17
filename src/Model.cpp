@@ -21,11 +21,9 @@ namespace Model {
     random_connected_graph(N, this->G, p);
     int P = prms.n_prms();
 
-    this->rs = (double*) malloc(P*G.N*sizeof(double));
-    this->rk = (double*) malloc(P*G.E*sizeof(double));
-
-    init_params(G.N, this->rs);
-    init_params(G.E, this->rk);
+    this->rs = (double*) malloc(P*(G.N+G.E)*sizeof(double));
+    this->rk = this->rs + P*G.N;
+    init_params(G.N+G.E, this->rs);
 
     this->C = (double*) calloc(G.N, sizeof(double));
     this->F = (double*) calloc(G.N, sizeof(double));
@@ -40,70 +38,102 @@ namespace Model {
     free(C);
     free(F);
     free(rs);
-    free(rk);
   }
 
-  int add_edge(Model& m)
-  {
-    int P = prms.n_prms();
-    if (prms.has_add_edge() && Math.rng_uniform()<prms.add_edge()) {
 
-      int e0 = m.E; Graph::add_edge(m.graph, false);
-      double* rk_tmp = (double*) malloc(P*G.N*sizeof(double));
+  Model* neighbor(Model& m, int n=1) {
 
-      memcpy(rk_tmp, m.rk, e0*sizeof(double));
-      m.rk = rk_tmp;
+    Model* n = new Model();
+    n->G = m.G;
 
-      if (m.E > e0) {
-        init_params(m.E-e0, rk_tmp + e0*P);
+    std::vector<int> node_idx;
+    std::vector<int> edge_idx;
+
+    for (int i=0; i<G.N; i++)
+      node_idx.push_back(i);
+
+    for (int i=0; i<G.E; i++) {
+      edge_idx.push_back(i);
+    }
+
+    double rng[4];
+    rng=uniform(4, rng);
+
+    if (prms.has_add_edge() && rng[0] < prms.mutation().add_edge()) {
+      Graph::add_edge(n->G, false);
+
+      while(edge_idx.size() < n->G.E)
+        edge_idx.push_back(-1);
+    }
+
+    if (prms.has_add_node() && rng[1] < prms.mutation().add_node()) {
+      Graph::add_node(n->G, false);
+
+      while(edge_idx.size() < n->G.E)
+        edge_idx.push_back(-1);
+
+      while(node_idx.size() < n->G.N)
+        node_idx.push_back(-1);
+    }
+
+    if (prms.has_rm_edge() && rng[2] < prms.mutation().rm_edge()) {
+      Graph::rm_edge(n->G, eidx, true);
+
+      while(edge_idx.size() < n->G.E)
+        edge_idx.push_back(-1);
+
+      while(node_idx.size() < n->G.N)
+        node_idx.push_back(-1);
+    }
+
+    if (prms.has_rm_node() && rng[3] < prms.mutation().rm_node()) {
+      Graph::rm_node(n->G, nidx, eidx, true);
+
+      while(edge_idx.size() < n->G.E)
+        edge_idx.push_back(-1);
+
+      while(node_idx.size() < n->G.N)
+        node_idx.push_back(-1);
+    }
+
+    int N = n->G.N, E = n->G.E;
+    int P = prms.n_prms()
+
+    n->rs = (double*) malloc(P*(N+E)*sizeof(double));
+    n->rk = n->rs + P*N;
+    init_params(N+E, n->rs);
+
+    int* nidx = &node_idx[0];
+    int* eidx = &edge_idx[0];
+
+    for (int i=0; i<N; i++) {
+      if (nidx[i] > 0)
+        memcpy(n->rs[P*i], m.rs[P*nidx[i]], P*sizeof(double));
+    }
+    for (int i=0; i<E; i++) {
+      if (eidx[i] > 0) {
+        memcpy(n->rk[P*i], m.rk[P*eidx[i]], P*sizeof(double));
       }
     }
-  }
 
-  int add_node(Model& m)
-  {
-    int P = prms.n_prms();
-    if (prms.has_add_node() && Math.rng_uniform()<prms.add_node()) {
+    int* mask = (int*) malloc(N+E*sizeof(int));
+    double* mult = (double*) malloc(N+E*sizeof(double));
+    double* r = (double*) malloc(N+E*sizeof(double));
 
-      int n0 = m.N; Graph::add_node(m.graph);
-      double* rs_tmp = (double*) malloc(P*G.N*sizeof(double));
+    Math::rng_int(N+E, mask, 0, 2)
+    for(int i=0; i<N+E; i++) *(mult++) = *(mask++);
 
-      memcpy(rk_tmp, m.rk, e0*sizeof(double));
-      m.rk = rk_tmp;
+    double sig = prms.mutation().sig();
+    Math::rng_gaussian(N+E, r, 0, sig);
 
-      if (m.E > e0) {
-        init_params(m.E-e0, rk_tmp + e0*P);
-      }
-    }
-  }
+    vdMult(N+E, r, mult, r);
+    vdAdd(N+E, r, n->rs, n->rs);
 
-  int rm_edge(Model& m) {}
+    free(mask);
+    free(mult);
+    free(r);
 
-  int rm_node(Model& m) {}
-
-  int neighbor(Model& m, vector<Model>& neighbors, int n=1) {
-
-    neighbors = vector<Model>()
-    for (int i = 0)
-
-    n.graph = m.graph;
-    int* idx;
-
-    if (prms.has_add_edge() && Math.rng_uniform() < prms.add_edge) {
-      Graph::add_edge(n.graph, false);
-    }
-
-    if (prms.has_add_node() && Math.rng_uniform() < prms.add_node) {
-      Graph::add_node(n.graph, false);
-    }
-
-    if (prms.has_rm_edge() && Math.rng_uniform() < prms.rm_edge) {
-      Graph::rm_edge(n.graph, idx, true);
-    }
-
-    if (prms.has_rm_node() && Math.rng_uniform() < prms.rm_node) {
-      Graph::rm_node(n.graph, idx, true);
-    }
+    return n;
   }
 }
 
