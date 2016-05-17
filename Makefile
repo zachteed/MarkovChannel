@@ -2,7 +2,7 @@
 
 MKLROOT = /opt/intel/mkl
 
-INCLUDE_DIRS = -I include -I$(MKLROOT)/include
+INCLUDE_DIRS = -I include -I proto -I$(MKLROOT)/include
 
 CC = gcc
 
@@ -12,9 +12,9 @@ CFLAGS = $(INCLUDE_DIRS) -m64 -D USE_MKL
 
 LFLAGS = -L$(MKLROOT)/lib/intel64 -L/opt/intel/lib/intel64
 
-LIBS = -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -liomp5 -lpthread -lm -ldl -lstdc++
+LIBS = -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -liomp5 -lpthread -lm -ldl -lprotobuf -lstdc++
 
-SRCS = src/math_functions.cpp src/graph_functions.cpp src/tests/graph.cpp
+SRCS = proto/MarkovChannel.pb.cc src/math_functions.cpp src/graph_functions.cpp src/Model.cpp src/tests/graph.cpp
 
 OBJS = $(SRCS:.c=.o)
 
@@ -31,7 +31,6 @@ MAIN = MarkovChannel
 all:    $(MAIN)
 
 $(MAIN): $(OBJS)
-	$(PROTOC) -I=src --cpp_out=src src/MarkovChannel.proto
 	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
 
 
@@ -39,6 +38,10 @@ $(MAIN): $(OBJS)
 # it uses automatic variables $<: the name of the prerequisite of
 # the rule(a .c file) and $@: the name of the target of the rule (a .o file)
 # (see the gnu make manual section about automatic variables)
+
+proto/MarkovChannel.pb.cc:
+	$(PROTOC) -I=proto --cpp_out=proto proto/MarkovChannel.proto
+
 .c.o:
 	$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
 

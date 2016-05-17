@@ -44,9 +44,30 @@ message SolverParameter {
   optional SolverMode solver_mode = 1 [default = GENETIC_ALGORITHM];
   optional SimulationMode simulation_mode = 2 [default = ODE];
 
-  optional int32 max_iters = 3 [default = 10000];
-  optional GAParameter ga_param = 4;
-  optional SAParameter sa_param = 5;
+  required ModelParameter model_param = 3;
+
+  optional int32 max_iters = 4 [default = 10000];
+  optional GAParameter ga_param = 5;
+  optional SAParameter sa_param = 6;
+}
+
+message ModelParameter {
+  optional int32 min_states = 1 [default=3];
+  optional int32 max_states = 2 [default=10];
+  optional int32 n_prms = 3 [default=2];
+
+  optional double mu = 4 [default = 0.0];
+  optional double std = 5 [default = 1.0];
+
+  required MutationParameter mutation = 6;
+}
+
+message MutationParameter {
+  optional double add_edge = 1;
+  optional double add_node = 2;
+  optional double rm_edge = 3;
+  optional double rm_node = 4;
+  optional double std = 5 [default = 0.1];
 }
 
 message GAParameter {

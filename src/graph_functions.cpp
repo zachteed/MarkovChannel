@@ -137,7 +137,7 @@ namespace Graph {
     free(c_found); return 1;
   }
 
-  int add_edge(Graph& G, int* idx, bool force)
+  int add_edge(Graph& G, bool force)
   {
     if (!force) {
       int r1 = Math::rng_int(0, G.N);
@@ -183,7 +183,7 @@ namespace Graph {
     G.E++; G.N++; return 1;
   }
 
-  int rm_edge(Graph& G, int*& idx, bool reconnect) {
+  int rm_edge(Graph& G, int* idx, bool reconnect) {
 
     // make sure there is an edge to remove
     if (G.E <= 1) {
@@ -193,6 +193,9 @@ namespace Graph {
     int e0=G.E, rnd = Math::rng_int(0, G.E);
     G.edges[rnd] = G.edges.back();
 
+    idx[rnd] = idx[e0-1];
+    idx[e0-1] = -1;
+
     idx[G.E-1] = rnd; idx[rnd] = -1;
     G.edges.pop_back(); G.E--;
 
@@ -201,16 +204,11 @@ namespace Graph {
       connect(G);
     }
 
-    int* tmp_idx = (int*) malloc(G.E*sizeof(int));
-    memcpy(tmp_idx, idx, e0*sizeof(int));
-
-    for (int i=e0; i<G.E; i++) tmp_idx[i]=-1;
-    tmp_idx[rnd] = idx[e0-1]; tmp_idx[e0-1]=-1;
-    free(idx); idx = tmp_idx; return 1;
+    return 1;
 
   }
 
-  int rm_node(Graph& G, int*& nidx, int*& eidx, bool reconnect) {
+  int rm_node(Graph& G, int* nidx, int* eidx, bool reconnect) {
 
     // make sure there is an edge to remove
     if (G.N <= 1) {
@@ -219,31 +217,41 @@ namespace Graph {
 
     int e0 = G.E, n0 = G.N;
     int rnd = Math::rng_int(0, G.N);
-    std::vector<Edge> tmp;
+
+    int *t_eidx = (int*) malloc(G.E*sizeof(int));
+    memcpy(t_eidx, eidx, e0*sizeof(int));
+
+    for (int i=rnd; i<G.N-1; i++) {
+      nidx[i] = nidx[i+1];
+    }
+    nidx[G.N-1] = -1; G.N--;
 
     int i, index = 0;
+    std::vector<Edge> tmp;
+
     for (int i=0; i<G.E; i++) {
-      Edge& e = G.edges[i]; idx[i] = -1;
+      Edge& e = G.edges[i];
       if (!(e.V1 == rnd || e.V2 == rnd)) {
+
         if (e.V1 > rnd) e.V1--;
         if (e.V2 > rnd) e.V2--;
+
         tmp.push_back(G.edges[i]);
-        idx[i] = index; index++;
+        eidx[index++] = t_eidx[i];
       }
     }
-    G.edges = tmp;
-    G.E = tmp.size();
-    G.N--;
+    G.edges = tmp; G.E = tmp.size();
+
+    for (int i=index; index<G.E; i++) {
+      eidx[index] = -1;
+    }
 
     // reconnect graph if broken
     if (reconnect) {
       connect(G);
     }
 
-    int *t_nidx = (int*) malloc(G.N*sizeof(int));
-    int *t_eidx = (int*) malloc(G.E*sizeof(int));
-
-    return rnd;
+    free(t_eidx); return rnd;
   }
 
   std::ostream& operator<< (std::ostream& os, const Graph& G)

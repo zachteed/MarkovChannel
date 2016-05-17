@@ -4,8 +4,10 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
 
+#include "mkl.h"
 #include "math_functions.hpp"
 
 namespace Graph {
@@ -37,9 +39,9 @@ namespace Graph {
 
   int add_node(Graph& G, bool force=false);
 
-  int rm_edge(Graph& G, int*& idx, bool reconnect=true);
+  int rm_edge(Graph& G, int* idx, bool reconnect=true);
 
-  int rm_node(Graph& G, int*& nidx, int*& eidx, bool reconnect=true);
+  int rm_node(Graph& G, int* nidx, int* eidx, bool reconnect=true);
 
   std::ostream& operator<< (std::ostream& os, const Graph& G);
 
