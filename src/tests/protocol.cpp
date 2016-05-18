@@ -27,7 +27,9 @@ int main(int argc, char* argv[])
 
   string protobuf(argv[1]);
   ChannelProtocol proto(protobuf);
-  cout << proto << endl;
+
+  for (int i = 0; i < proto.n_traces; i++ )
+    cout << proto.traces[i] << endl;
 
   google::protobuf::ShutdownProtobufLibrary();
 

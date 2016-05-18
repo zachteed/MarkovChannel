@@ -13,6 +13,18 @@ namespace Graph {
       || (e.V1 == n2 && e.V2 == n1);
   }
 
+  double* incidence(Graph& G) {
+    double* ic = (double*) calloc(2*G.E*G.N, sizeof(double));
+    for(int i=0; i<G.E; i++) {
+      Edge& e = G.edges[i];
+      ic[2*G.E*e.V1 + 2*i] = -1;
+      ic[2*G.E*e.V2 + 2*i] = 1;
+      ic[2*G.E*e.V1 + 2*i+1] = 1;
+      ic[2*G.E*e.V2 + 2*i+1] = -1;
+    }
+    return ic;
+  }
+
   int random_connected_graph(int N, Graph& G, double p)
   {
 
@@ -260,7 +272,7 @@ namespace Graph {
   {
     for (int i=0; i<G.E; i++) {
       const Edge& e = G.edges[i];
-      os << "(" << e.V1 << ", " << e.V2 << ")\n";
+      os << "" << e.V1 << ", " << e.V2 << "\n";
     }
     return os;
   }

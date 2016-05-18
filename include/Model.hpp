@@ -33,6 +33,9 @@ namespace Model {
     double *C, *F;
     double *r_vec;
 
+    int n_states() {return G.N;};
+    int n_edges() {return G.E;};
+
   };
 
   Model* neighbor(Model& m, int num=1);

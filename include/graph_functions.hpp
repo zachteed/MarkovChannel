@@ -24,6 +24,8 @@ namespace Graph {
     int E, N;
   };
 
+  double* incidence(Graph& G);
+
   int random_connected_graph(int N, Graph& G, double p=0.2);
 
   int adj_list(Graph& G, std::vector<std::vector<int> >& lst);

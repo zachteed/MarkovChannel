@@ -159,6 +159,7 @@ namespace Model {
 
     cblas_dgemv(CblasRowMajor, CblasNoTrans, N, P,
         1.0, m.rs, P, var, 1, 0.0, s, 1);
+    vdExp(P*N, s, s);
     cblas_dscal(N, 1.0/cblas_dasum(N, s, 1), s, 1);
     return s;
   }

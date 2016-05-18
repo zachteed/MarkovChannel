@@ -1,11 +1,13 @@
 #include "Model.hpp"
 #include "math_functions.hpp"
+#include "graph_functions.hpp"
 #include "MarkovChannel.pb.h"
 
 #include <fstream>
 #include <iostream>
 #include <vector>
 #include <cstdlib>
+#include <stdio.h>
 
 #include <fcntl.h>
 #include <google/protobuf/io/coded_stream.h>
@@ -34,11 +36,42 @@ int main(int argc, char* argv[]) {
   Model::prms = solver_param.model_param(); delete input;
 
 
-  Model::Model* n;
-
   Model::Model model(5);
-  n = Model::neighbor(model);
-  delete n;
+  cout << model << endl;
+  double* y0 = (double*) malloc(model.n_states()*sizeof(double));
+  Model::initial_state(model, -20, y0);
+
+  for(int i=0; i<model.n_states(); i++) {
+    cout << y0[i] << endl;
+  }
+
+  cout << endl;
+
+  double* ic = Graph::incidence(model.G);
+  for (int i=0; i<model.G.N; i++) {
+    for (int j=0; j<(2*model.G.E); j++) {
+      printf("%3.1f\t", ic[2*i*model.G.E+j]);
+    }
+    printf("\n");
+  }
+
+  int N = model.n_states();
+  double* Q = (double*) malloc(N*N*sizeof(double));
+
+  Model::transition_matrix(model, -20, Q);
+  for (int i=0; i<N; i++) {
+    for (int j=0; j<N; j++) {
+      printf("%8.4f\t", Q[i*N+j]);
+    }
+    printf("\n");
+  }
+
+  for (int i=0; i<2*model.n_edges(); i++) {
+    cout << model.r_vec[2*i] << "\t" << model.r_vec[2*i + 1] << endl;
+  }
+
+
+
 
 
 

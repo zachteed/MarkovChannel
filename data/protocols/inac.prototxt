@@ -1,15 +1,16 @@
-name: "inac"
-source: "data/recordings/inac.txt"
-v0: -120.0
+name:     "inac"
+source:   "data/data/inac.txt"
+v0:       -120.0
+normalize: true
 
 step {
   dt: 200.0
-  stype: PEAK
+  stype: NONE
 }
 
 step {
   dt: 5.0
+  vm: -20
   stype: PEAK
-  normalize: true
   stepsize: 0.1
 }

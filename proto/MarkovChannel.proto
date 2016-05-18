@@ -3,19 +3,20 @@ syntax = "proto2";
 package MarkovChannel;
 
 message ProtocolParameter {
+
   required string name = 1;
   optional string source = 2;
+
   optional double v0 = 3 [default = -120];
   optional double temperature = 4 [default = 293.0];
-  repeated ProtocolStep step = 5;
+  optional bool normalize = 5 [default = false];
+  repeated double weights = 6;
+
+  repeated ProtocolStep step = 7;
+
 }
 
 message ProtocolStep {
-  optional double dt = 1;
-  optional double vm = 2;
-
-  optional bool conductance = 3;
-  optional bool fluorimetry = 4;
 
   enum StepType {
     NONE = 0;
@@ -24,18 +25,29 @@ message ProtocolStep {
     TRACE = 3;
   }
 
-  optional StepType stype = 5 [default = NONE];
-  optional bool normalize = 6 [default = true];
-  optional double prm1 = 7 [default = 0.1];
-  optional double prm2 = 8 [default = 0.9];
-  optional double stepsize = 9 [default = 0.1];
+  enum DataType {
+    CONDUCTANCE = 0;
+    FLUORIMETRY = 1;
+  }
+
+  optional double dt = 1;
+  optional double vm = 2;
+
+  optional StepType stype = 3 [default = NONE];
+  optional DataType dtype = 4 [default = CONDUCTANCE];
+
+  optional double stepsize = 8 [default = 0.1];
+  repeated double extra_args = 9;
+
 }
 
 message SolverParameter {
+
   enum SolverMode {
     GENETIC_ALGORITHM = 0;
     SIMULATED_ANNEALING = 1;
   }
+
   enum SimulationMode {
     ODE = 0;
     EXPM = 1;
@@ -45,12 +57,14 @@ message SolverParameter {
   optional SimulationMode simulation_mode = 2 [default = ODE];
 
   required ModelParameter model_param = 3;
+  required string protocols = 4;
 
-  optional int32 max_iters = 4 [default = 10000];
-  optional GAParameter ga_param = 5;
-  optional SAParameter sa_param = 6;
+  optional double node_penality = 5 [default = 1.0];
+  optional double edge_penality = 6 [default = 1.0];
 
-  optional string protocols = 7;
+  optional GAParameter ga_param = 7;
+  optional SAParameter sa_param = 8;
+
 }
 
 message ModelParameter {
