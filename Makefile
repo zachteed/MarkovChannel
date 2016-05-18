@@ -2,7 +2,7 @@
 
 MKLROOT = /opt/intel/mkl
 
-INCLUDE_DIRS = -I include -I proto -I$(MKLROOT)/include
+INCLUDE_DIRS = -I include -I proto -I$(MKLROOT)/include -I/opt/intel/intel_ode/include
 
 CC = gcc
 
@@ -10,11 +10,11 @@ PROTOC = protoc
 
 CFLAGS = $(INCLUDE_DIRS) -m64 -D USE_MKL
 
-LFLAGS = -L$(MKLROOT)/lib/intel64 -L/opt/intel/lib/intel64
+LFLAGS = -L$(MKLROOT)/lib/intel64 -L/opt/intel/lib/intel64 -L/opt/intel/intel_ode/lib/intel64
 
-LIBS = -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -liomp5 -lpthread -lm -ldl -lprotobuf -lstdc++
+LIBS = -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -liomp5 -lpthread -lm -ldl -lprotobuf -liode_intel64 -lstdc++
 
-SRCS = proto/MarkovChannel.pb.cc src/ChannelProtocol.cpp src/math_functions.cpp src/graph_functions.cpp src/Model.cpp src/tests/protocol.cpp
+SRCS = proto/MarkovChannel.pb.cc src/ChannelProtocol.cpp src/math_functions.cpp src/graph_functions.cpp src/Model.cpp src/cost.cpp src/tests/protocol.cpp
 
 OBJS = $(SRCS:.c=.o)
 

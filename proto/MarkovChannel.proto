@@ -10,7 +10,7 @@ message ProtocolParameter {
   optional double v0 = 3 [default = -120];
   optional double temperature = 4 [default = 293.0];
   optional bool normalize = 5 [default = false];
-  repeated double weights = 6;
+  optional double weight = 6 [default = 1];
 
   repeated ProtocolStep step = 7;
 

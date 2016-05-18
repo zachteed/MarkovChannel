@@ -24,6 +24,11 @@ ChannelProtocol::ChannelProtocol(std::string& prototxt)
   std::ifstream datfile;
   datfile.open(params.source().c_str());
 
+  if (!datfile) {
+    std::cerr << "Unable to Open Source:\t" << params.source() << std::endl;
+    exit(-1);
+  }
+
   std::cout << params.source() << std::endl;
 
   double x; std:string line;

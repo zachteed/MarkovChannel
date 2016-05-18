@@ -1,18 +1,18 @@
 #ifndef COST_HPP_
-#defin COST_HPP_
+#define COST_HPP_
 
 #include <vector>
 #include <iostream>
 #include <cstdlib>
-
-#include "math_fucntions.hpp"
-#include "graph_functions.hpp"
-#include "solver_functions.hpp"
+#include <mkl.h>
 
 #include "Model.hpp"
+#include "ChannelProtocol.hpp"
+#include "math_functions.hpp"
+#include "graph_functions.hpp"
 #include "MarkovChannel.pb.h"
 
-double cost(Model& model, std::vector<MarkovChannel::ChannelProtocol>& protocols, 
-   MarkovChannel::SolverParameter& solver_param);
+double cost(Model::Model& m, std::vector<ChannelProtocol>& protos,
+   MarkovChannel::SolverParameter& sparam);
 
 #endif
