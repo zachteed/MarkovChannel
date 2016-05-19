@@ -1,5 +1,8 @@
 solver_mode: SIMULATED_ANNEALING
-simulation_mode: ODE
+simulation_mode: EXPM
+
+node_penality: 1.0
+edge_penality: 1.0
 
 model_param {
 

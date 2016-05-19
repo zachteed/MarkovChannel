@@ -2,21 +2,23 @@
 
 MKLROOT = /opt/intel/mkl
 
-INCLUDE_DIRS = -I include -I proto -I$(MKLROOT)/include -I/opt/intel/intel_ode/include
+INCLUDE_DIRS = -I include -I proto -I$(MKLROOT)/include -I/usr/local/include
 
 CC = gcc
 
+FORT = gfortran
+
 PROTOC = protoc
 
-CFLAGS = $(INCLUDE_DIRS) -m64 -D USE_MKL
+CFLAGS = $(INCLUDE_DIRS) -m64 -D USE_MKL -pg
 
-LFLAGS = -L$(MKLROOT)/lib/intel64 -L/opt/intel/lib/intel64 -L/opt/intel/intel_ode/lib/intel64
+LFLAGS = -L$(MKLROOT)/lib/intel64 -L/opt/intel/lib/intel64 -L/usr/local/lib/
 
-LIBS = -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -liomp5 -lpthread -lm -ldl -lprotobuf -liode_intel64 -lstdc++
+LIBS = -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -liomp5 -lpthread -lm -ldl -lprotobuf -lgsl -lgslcblas -lblas -llapack -lgfortran -lstdc++
 
-SRCS = proto/MarkovChannel.pb.cc src/ChannelProtocol.cpp src/math_functions.cpp src/graph_functions.cpp src/Model.cpp src/cost.cpp src/tests/protocol.cpp
+SRCS = proto/MarkovChannel.pb.cc src/ChannelProtocol.cpp src/math_functions.cpp src/graph_functions.cpp src/Model.cpp src/cost.cpp src/main.cpp
 
-OBJS = $(SRCS:.c=.o)
+OBJS = $(SRCS:.c=.o) src/private/dgpadm.f.o
 
 MAIN = MarkovChannel
 
@@ -44,6 +46,10 @@ proto/MarkovChannel.pb.cc:
 
 .c.o:
 	$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
+
+src/private/dgpadm.f.o:
+	$(FORT) -c src/private/dgpadm.f $< -o src/private/dgpadm.f.o
+
 
 clean:
 	$(RM) *.o *~ $(MAIN)

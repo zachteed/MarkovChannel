@@ -1,4 +1,5 @@
 #include "Model.hpp"
+#include <math.h>
 
 
 
@@ -155,13 +156,14 @@ namespace Model {
   double* initial_state(Model& m, double vm, double* s)
   {
     double var[] = {1, vm/100.0};
-    int N=m.G.N, P=prms.n_prms();
+    int i, N=m.G.N, P=prms.n_prms();
 
     cblas_dgemv(CblasRowMajor, CblasNoTrans, N, P,
         1.0, m.rs, P, var, 1, 0.0, s, 1);
-    vdExp(P*N, s, s);
-    cblas_dscal(N, 1.0/cblas_dasum(N, s, 1), s, 1);
-    return s;
+
+    for (i=0; i<N; i++) s[i] = exp(s[i]);
+    double scale = 1.0/cblas_dasum(N, s, 1);
+    cblas_dscal(N, scale, s, 1); return s;
   }
 
 
@@ -179,8 +181,8 @@ namespace Model {
       memcpy(&b_mat[P*E], m.rk, P*E*sizeof(double));
 
       for ( int i=0; i<E; i++ ) {
-        vdSub(P, &b_mat[P*(i+E)], &b_mat[P*i], &m.r_vec[P*2*i]);
-        vdAdd(P, &b_mat[P*(i+E)], &b_mat[P*i], &m.r_vec[P*(2*i+1)]);
+        vdAdd(P, &b_mat[P*(i+E)], &b_mat[P*i], &m.r_vec[P*(2*i+0)]);
+        vdSub(P, &b_mat[P*(i+E)], &b_mat[P*i], &m.r_vec[P*(2*i+1)]);
       }
       cblas_dscal(2*E*P, .5, m.r_vec, 1); free(b_mat);
     }
@@ -193,7 +195,7 @@ namespace Model {
   {
 
     double var[] = {1, vm/100.0};
-    int N=m.G.N, E=m.G.E, P=prms.n_prms();
+    int i, N=m.G.N, E=m.G.E, P=prms.n_prms();
 
     double *r_vec = rate_vector(m);
     double *e_vec = (double*) malloc(2*E*sizeof(double));
@@ -201,10 +203,10 @@ namespace Model {
     cblas_dgemv(CblasRowMajor, CblasNoTrans, 2*E, P, 1.0,
         r_vec, P, var, 1, 0.0, e_vec, 1);
 
-    vdExp(2*E, e_vec, e_vec);
+    for (i=0; i<2*E; i++) e_vec[i] = exp(e_vec[i]);
     memset(Q, 0, N*N*sizeof(double));
 
-    for (size_t i=0; i<E; i++) {
+    for (i=0; i<E; i++) {
       int e1 = m.G.edges[i].V1; int e2 = m.G.edges[i].V2;
       Q[N*e1+e1] -= e_vec[2*i]; Q[N*e2+e2] -= e_vec[2*i+1];
       Q[N*e2+e1] += e_vec[2*i]; Q[N*e1+e2] += e_vec[2*i+1];

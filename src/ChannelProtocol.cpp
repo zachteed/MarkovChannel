@@ -29,14 +29,11 @@ ChannelProtocol::ChannelProtocol(std::string& prototxt)
     exit(-1);
   }
 
-  std::cout << params.source() << std::endl;
-
   double x; std:string line;
   data = std::vector<double>();
   vars = std::vector<double>();
 
   while (std::getline(datfile, line)) {
-    std::cout << line << std::endl;
     std::istringstream iss(line);
     iss >> x; vars.push_back(x);
     while (iss>>x) {data.push_back(x);}
@@ -46,8 +43,6 @@ ChannelProtocol::ChannelProtocol(std::string& prototxt)
   n_traces = (int) vars.size();
   v0 = params.v0();
   traces = std::vector<std::vector<Step> >();
-
-  std::cout << n_traces << "\t" << v0 << std::endl;
 
   for ( int i=0; i<n_traces; i++ ) {
     traces.push_back(std::vector<Step>());
@@ -96,6 +91,7 @@ ChannelProtocol::ChannelProtocol(std::string& prototxt)
 
     }
   }
+
 }
 
 

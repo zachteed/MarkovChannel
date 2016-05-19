@@ -1,10 +1,10 @@
 name: "gv_wt"
 source: "data/data/gv.txt"
 v0: -120.0
+normalize: true
 
 step {
   dt: 5.0
   stype: PEAK
-  normalize: true
   stepsize: 0.1
 }

@@ -7,9 +7,11 @@ N = size(rs, 1);
 E = size(rk, 1);
 
 D = zeros(E, 2*E);
-D(:, 1:2:end) = -eye(E);
-D(:, 2:2:end) = eye(E);
+D(:, 1:2:end) = eye(E);
+D(:, 2:2:end) = -eye(E);
 D = [D;abs(D)];
+
+D^-1
 
 r_vec = exp(D^-1 * [ic(:, 1:2:end)'*rs; rk] * args);
 Q = ic * diag(r_vec(:)) * (-min(ic, 0)');
