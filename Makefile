@@ -16,7 +16,7 @@ LFLAGS = -L$(MKLROOT)/lib/intel64 -L/opt/intel/lib/intel64 -L/usr/local/lib/
 
 LIBS = -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -liomp5 -lpthread -lm -ldl -lprotobuf -lgsl -lgslcblas -lblas -llapack -lgfortran -lstdc++
 
-SRCS = proto/MarkovChannel.pb.cc src/ChannelProtocol.cpp src/math_functions.cpp src/graph_functions.cpp src/Model.cpp src/cost.cpp src/main.cpp
+SRCS = proto/MarkovChannel.pb.cc src/ChannelProtocol.cpp src/math_functions.cpp src/graph_functions.cpp src/Model.cpp src/cost.cpp src/SimulatedAnnealing.cpp src/main.cpp
 
 OBJS = $(SRCS:.c=.o) src/private/dgpadm.f.o
 

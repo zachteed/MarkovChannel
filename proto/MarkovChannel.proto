@@ -106,9 +106,14 @@ message GAParameter {
 }
 
 message SAParameter {
+
   optional int32 k_max = 1 [default = 100];
-  optional double gamma = 2 [default = 0.01];
-  optional TransitionParameter transition_param = 3;
+  optional int32 step = 2 [default = 1000];
+  optional double gamma = 3 [default = 0.9];
+  optional double t0 = 4 [default = 0.01];
+  optional int32 display = 5 [default = 100];
+  optional int32 n_chains = 6 [default = 100];
+
 }
 
 message TransitionParameter {

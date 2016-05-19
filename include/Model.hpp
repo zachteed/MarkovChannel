@@ -24,6 +24,7 @@ namespace Model {
     int id;
 
     Model(int N, double p=0.2);
+    Model(Model& m);
     Model();
     ~Model();
 
@@ -35,6 +36,8 @@ namespace Model {
 
     int n_states() {return G.N;};
     int n_edges() {return G.E;};
+
+    double loss;
 
   };
 

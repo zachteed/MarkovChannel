@@ -24,10 +24,30 @@ namespace Model {
     id = Model::count++;
   }
 
+
   Model::Model()
   {
     r_vec = NULL; rs=NULL; C = NULL; F = NULL;
     id = Model::count++;
+  }
+
+
+  Model::Model(Model& m)
+  {
+
+    int N = m.n_states(), E = m.n_edges(), P = prms.n_prms();
+    this->rs = (double*) malloc(P*(N+E)*sizeof(double));
+
+    memcpy(this->rs, m.rs, P*(N+E)*sizeof(double));
+    this->rk = this->rs + P*G.N; this->G = m.G;
+
+    this->C = (double*) calloc(G.N, sizeof(double));
+    this->F = (double*) calloc(G.N, sizeof(double));
+
+    memcpy(this->C, m.C, G.N*sizeof(double));
+    memcpy(this->F, m.F, G.N*sizeof(double));
+
+    id = Model::count++; r_vec = NULL;
   }
 
   Model::~Model()
