@@ -104,6 +104,8 @@ namespace Model {
       n->rs[i] += r[i];
     }
 
+/*
+
     Math::rng_uniform(N, mult);
     Math::rng_gaussian(N, r, 0, 0.1);
 
@@ -113,7 +115,7 @@ namespace Model {
         n->C[i] = min(1.0, max(0.0, n->C[i]));
       }
     }
-
+*/
     free(mult); free(r); return n;
 
 
