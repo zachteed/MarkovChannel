@@ -14,6 +14,7 @@ namespace Graph {
 
   struct Edge {
     Edge(int v1, int v2) : V1(v1), V2(v2) {};
+    Edge(const Edge& e) : V1(e.V1), V2(e.V2) {};
     int V1, V2;
   };
 

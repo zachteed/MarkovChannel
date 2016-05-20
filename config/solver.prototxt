@@ -1,8 +1,8 @@
 solver_mode: SIMULATED_ANNEALING
 simulation_mode: EXPM
 
-node_penality: 1.0
-edge_penality: 1.0
+node_penality: 0.0001
+edge_penality: 0.0002
 
 model_param {
 
@@ -20,4 +20,13 @@ model_param {
     update_prob: 0.2
   }
 
+}
+
+sa_param {
+  k_max: 100000
+  n_chains: 10
+  step: 1000
+  gamma: 0.9
+  t0: 0.001
+  display: 1000
 }

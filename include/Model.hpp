@@ -24,7 +24,7 @@ namespace Model {
     int id;
 
     Model(int N, double p=0.2);
-    Model(Model& m);
+    Model(Model* m);
     Model();
     ~Model();
 
@@ -41,7 +41,7 @@ namespace Model {
 
   };
 
-  Model* neighbor(Model& m, int num=1);
+  Model* neighbor(Model* m, int num=1);
 
   double* initial_state(Model& m, double vm, double* s);
 

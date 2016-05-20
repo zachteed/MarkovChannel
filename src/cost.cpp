@@ -40,17 +40,18 @@ inline double tau(int n, double* x, double v1, double v2)
   double res;
 
   if (v2 > v1) {
-    int i1=0, i2=0; for(int t=0; t<idx; t++) {
+    int i1=0, i2=idx; for(int t=0; t<idx; t++) {
       if (!i1 && x[t+1] > v1 && x[t] <= v1) i1=t;
       if (!i2 && x[t+1] > v2 && x[t] <= v2) i2=t;
     }
     res = i2 - i1;
   } else {
-    int i1=0, i2=0; for(int t=idx; t<(n-1); t++) {
+    int i1=idx, i2=n; for(int t=idx; t<(n-1); t++) {
       if (!i1 && x[t+1] < v1 && x[t] >= v1) i1=t;
       if (!i2 && x[t+1] < v2 && x[t] >= v2) i2=t;
     }
-    res = i2 - i1;
+    if (i2==n) res = (i2 - i1) + 10*(x[n-1]-v2);
+    else res = i2 - i1;
   }
 
   return res;
@@ -86,6 +87,12 @@ int step_ode(Model::Model& m, vector<Step>& steps,
   int N = m.n_states();
   double* Q = &y[N];
   void* params[2] = {(void*) &N, (void*) &Q};
+
+
+  // if ( N != 6 )
+  //   std::cout << m << std::endl;
+
+  // std::cout << N << std::endl;
 
   //
   // ode_struct params; params.N = N; params.Q = Q;
@@ -236,7 +243,7 @@ int step_exp(Model::Model& m, vector<Step>& steps,
 
 
 double cost(Model::Model& m, ChannelProtocol& proto,
-  SolverParameter sparam)
+  SolverParameter sparam, bool print=false)
 {
   std::vector<double> output;
   int ierr, N = m.n_states();
@@ -276,12 +283,22 @@ double cost(Model::Model& m, ChannelProtocol& proto,
     }
   }
 
+  if (print) {
+    printf("%s\n", proto.params.name().c_str());
+    for (int i = 0; i < output.size(); i++) {
+      printf("%8.4f\t%8.4f\n", output[i], proto.data[i]);
+    }
+    printf("\n");
+  }
+
   for (int i = 0; i < output.size(); i++) {
     dx = output[i] - proto.data[i];
     err += (1.0 / n) * dx * dx;
   }
 
-  free(y0); free(y); return 0;
+  free(y0); free(y);
+  if (isnan(err)) return 1e6;
+  return err;
 }
 
 
@@ -295,11 +312,11 @@ double model_penality(Model::Model& m, SolverParameter& sparam)
 
 
 double cost(Model::Model& m, vector<ChannelProtocol>& protos,
-  SolverParameter& sparam)
+  SolverParameter& sparam, bool print)
 {
   double error = 0;
   for ( int i = 0; i < protos.size(); i++ ) {
-    error += protos[i].params.weight() * cost(m, protos[i], sparam);
+    error += protos[i].params.weight() * cost(m, protos[i], sparam, print);
   }
   return  error + model_penality(m, sparam);
 }

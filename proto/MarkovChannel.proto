@@ -113,6 +113,8 @@ message SAParameter {
   optional double t0 = 4 [default = 0.01];
   optional int32 display = 5 [default = 100];
   optional int32 n_chains = 6 [default = 100];
+  optional double restart = 7 [default = 0.001];
+  optional int32 snapshot = 8 [default = 1000];
 
 }
 

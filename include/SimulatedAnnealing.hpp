@@ -8,7 +8,7 @@
 
 
 
-typedef double (*cost_function)(Model::Model&);
+typedef double (*cost_function)(Model::Model*, bool);
 
 namespace SimulatedAnnealing
 {

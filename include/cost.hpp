@@ -13,6 +13,6 @@
 #include "MarkovChannel.pb.h"
 
 double cost(Model::Model& m, std::vector<ChannelProtocol>& protos,
-   MarkovChannel::SolverParameter& sparam);
+   MarkovChannel::SolverParameter& sparam, bool print = false);
 
 #endif
