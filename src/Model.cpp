@@ -1,6 +1,9 @@
 #include "Model.hpp"
 #include <math.h>
 
+#define min(a, b) (((a) < (b)) ? (a) : (b))
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+
 
 
 namespace Model {
@@ -82,6 +85,9 @@ namespace Model {
 
     n->C = (double*) calloc(N, sizeof(double));
     n->F = (double*) calloc(N, sizeof(double));
+    memcpy(n->C, m->C, N*sizeof(double));
+    memcpy(n->F, m->F, N*sizeof(double));
+
     n->C[0] = 1; n->F[0] = 1;
 
     const MarkovChannel::MutationParameter& mut = prms.mutation();
@@ -96,6 +102,16 @@ namespace Model {
     for(int i=0; i<P*(N+E); i++) {
       r[i] = (mult[i] < prob) ? r[i] : 0;
       n->rs[i] += r[i];
+    }
+
+    Math::rng_uniform(N, mult);
+    Math::rng_gaussian(N, r, 0, 0.1);
+
+    for (int i=1; i<N; i++) {
+      if (mult[i] < 0.05) {
+        n->C[i] += r[i];
+        n->C[i] = min(1.0, max(0.0, n->C[i]));
+      }
     }
 
     free(mult); free(r); return n;
@@ -227,7 +243,8 @@ namespace Model {
 
   double* initial_state(Model& m, double vm, double* s)
   {
-    double var[] = {1, vm/100.0};
+
+    double var[] = {1, vm/100, tanh((vm+20)/50)};
     int i, N=m.G.N, P=prms.n_prms();
 
     cblas_dgemv(CblasRowMajor, CblasNoTrans, N, P,
@@ -266,7 +283,7 @@ namespace Model {
   double* transition_matrix(Model& m, double vm, double* Q)
   {
 
-    double var[] = {1, vm/100.0};
+    double var[] = {1, vm/100, tanh((vm+20)/50)};
     int i, N=m.G.N, E=m.G.E, P=prms.n_prms();
 
     double *r_vec = rate_vector(m);

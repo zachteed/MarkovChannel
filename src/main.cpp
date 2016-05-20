@@ -56,10 +56,22 @@ double cost_f(Model::Model* m, bool print)
   return cost(*m, protos, solver_param, print);
 }
 
+void load_protocols(std::string& protolst)
+{
+  std::ifstream protofile;
+  protofile.open(protolst.c_str());
+
+  std::string line;
+  while ( protofile >> line ) {
+    protos.push_back(ChannelProtocol(line));
+  }
+}
+
 
 
 int main(int argc, char* argv[])
 {
+
   GOOGLE_PROTOBUF_VERIFY_VERSION;
   Math::init_stream(time(NULL));
 
@@ -69,12 +81,10 @@ int main(int argc, char* argv[])
   google::protobuf::TextFormat::Parse(input, &solver_param);
   Model::prms = solver_param.model_param(); delete input;
 
+  std::string proto_list = solver_param.protocol_list();
+  cout << proto_list << endl;
+  load_protocols(proto_list);
 
-  string s1("data/protocols/gv.prototxt");
-  string s2("data/protocols/inac.prototxt");
-
-  protos.push_back(ChannelProtocol(s1));
-  protos.push_back(ChannelProtocol(s2));
 
   MarkovChannel::SAParameter sa_param = solver_param.sa_param();
   SimulatedAnnealing::solve(cost_f, sa_param);
@@ -83,91 +93,5 @@ int main(int argc, char* argv[])
   google::protobuf::ShutdownProtobufLibrary();
   exit(0);
 
-
-
-
-  // Model::Model *m = new Model::Model(5);
-  // Model::Model *n = Model::neighbor(m);
-  // Model::Model *p = new Model::Model(m);
-  //
-  // cout << *m << endl;
-  // cout << *n << endl;
-  // cout << *p << endl;
-
-  // const int k_max = 10000;
-  // const double T0 = 0.002;
-  // const double gamma = 0.5;
-  //
-  // double T = T0;
-  //
-  // Model::Model *m = new Model::Model(6);
-  // double f = cost_f(*m);
-  //
-  // Model::Model *argmin = new Model::Model(m);
-  // double f_min = f;
-  //
-  // for ( int k=0; k<k_max; k++ ) {
-  //   Model::Model *n = Model::neighbor(m);
-  //
-  //   if (n->n_states() != 6 || m->n_states() != 6) {
-  //     cout << *n << endl;
-  //     cout << *m << endl;
-  //   }
-  //   double fn = cost_f(*n);
-  //   if ( Math::rng_uniform() < exp(-(fn-f)/T) ) {
-  //     delete m; f = fn; m = n;
-  //   }
-  //   else {
-  //     delete n;
-  //   }
-  //   if ( fn < f_min ) {
-  //     delete argmin; f_min = f;
-  //     argmin = new Model::Model(m);
-  //   }
-  //
-  //   if ( Math::rng_uniform() < 0.001 ) {
-  //     delete m; f = f_min;
-  //     m = new Model::Model(argmin);
-  //   }
-  //
-  //   if ( k  % 100 == 0 ) {
-  //     T *= gamma;
-  //     std::cout << f_min << std::endl;
-  //     cost_f(*m, true);
-  //     std::cout << std::endl;
-  //     // std::cout << f_min << std::endl;
-  //     // std::cout << *m << std::endl;
-  //
-  //   }
-  // }
-  //
-  // delete m;
-
-  // delete m; delete n;
-
-
-  // for ( int i=0; i < 100; i++ ) {
-  //   Model::Model m(6);
-  //   cout << m << endl;
-  //   cout << cost_f(m) << endl;
-  // }
-  //
-  // exit(0);
-  //
-  //
-  //
-  // // Model::Model model(5);
-  // // cost(model, protos, solver_param);
-  // // cout << model << endl;
-  //
-  // MarkovChannel::SAParameter sa_prm = solver_param.sa_param();
-  //
-  // SimulatedAnnealing::solve(cost_f, sa_prm);
-
-
-  // for (int i=0; i < 10000; i++) {
-  //   Model::Model model(8, 0.4);
-  //   cost(model, protos, solver_param);
-  // }
 
 }

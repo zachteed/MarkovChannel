@@ -37,21 +37,37 @@ inline double tau(int n, double* x, double v1, double v2)
 {
   int idx = cblas_idamax(n, x, 1);
   cblas_dscal(n, 1/x[idx], x, 1);
-  double res;
+  const double eps=1e-6; double res;
 
   if (v2 > v1) {
-    int i1=0, i2=idx; for(int t=0; t<idx; t++) {
-      if (!i1 && x[t+1] > v1 && x[t] <= v1) i1=t;
-      if (!i2 && x[t+1] > v2 && x[t] <= v2) i2=t;
+    double i1=-eps, i2=idx+eps;
+
+    for(int t=0; t < min(idx, n-1); t++) {
+      if ( i1 <= 0 && x[t+1] > v1 && x[t] <= v1) {
+        i1 = t + (v1 - x[t]) / (x[t+1] - x[t]);
+      }
+      if ( i2 >= idx && x[t+1] > v2 && x[t] <= v2) {
+        i2 = t + (v2 - x[t]) / (x[t+1] - x[t]);
+      }
     }
     res = i2 - i1;
-  } else {
-    int i1=idx, i2=n; for(int t=idx; t<(n-1); t++) {
-      if (!i1 && x[t+1] < v1 && x[t] >= v1) i1=t;
-      if (!i2 && x[t+1] < v2 && x[t] >= v2) i2=t;
+  }
+
+  else {
+    double i1=idx-eps, i2=n+eps;
+
+    for (int t=idx; t<(n-1); t++) {
+      if (i1 <= idx && x[t+1] < v1 && x[t] >= v1) {
+        i1 = t + (x[t] - v1) / (x[t+1] - x[t]);
+      }
+      if (i2 >= n && x[t+1] < v2 && x[t] >= v2) {
+        i2 = t + (x[t] - v2) / (x[t+1] - x[t]);
+      }
     }
-    if (i2==n) res = (i2 - i1) + 10*(x[n-1]-v2);
-    else res = i2 - i1;
+    if ( i2 >= n ) {
+      res = (i2 - i1) + 10*(x[n-1]-v2);
+    }
+    else { res = i2 - i1; }
   }
 
   return res;
@@ -258,7 +274,7 @@ double cost(Model::Model& m, ChannelProtocol& proto,
 
     if ( sparam.simulation_mode() == SolverParameter::ODE ) {
       ierr = step_ode(m, proto.traces[i], y, output);
-    if ( ierr < 0 ) {
+      if ( ierr < 0 ) {
         free(y); free(y0); return 1e6;
       }
     }

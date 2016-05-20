@@ -14,7 +14,7 @@ CFLAGS = $(INCLUDE_DIRS) -m64 -D USE_MKL -pg
 
 LFLAGS = -L$(MKLROOT)/lib/intel64 -L/opt/intel/lib/intel64 -L/usr/local/lib/
 
-LIBS = -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -liomp5 -lpthread -lm -ldl -lprotobuf -lgsl -lgslcblas -lblas -llapack -lgfortran -lstdc++ -fopenmp
+LIBS = -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl -lprotobuf -liomp5 -lgsl -lgslcblas -lblas -llapack -lgfortran -lstdc++ -fopenmp
 
 SRCS = proto/MarkovChannel.pb.cc src/ChannelProtocol.cpp src/math_functions.cpp src/graph_functions.cpp src/Model.cpp src/cost.cpp src/SimulatedAnnealing.cpp src/main.cpp
 

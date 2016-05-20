@@ -40,7 +40,14 @@ ChannelProtocol::ChannelProtocol(std::string& prototxt)
   }
   delete input;
 
-  n_traces = (int) vars.size();
+  n_traces = 1;
+  for ( int t=0; t<params.step_size(); t++) {
+    if (!params.step(t).has_dt() || !params.step(t).has_vm()) {
+      n_traces = (int) vars.size();
+    }
+  }
+
+
   v0 = params.v0();
   traces = std::vector<std::vector<Step> >();
 
@@ -54,7 +61,7 @@ ChannelProtocol::ChannelProtocol(std::string& prototxt)
       stp.stepsize = params.step(t).stepsize();
 
       stp.dt = params.step(t).has_dt() ? params.step(t).dt() : vars[i];
-      stp.vm = params.step(t).has_vm() ? params.step(t).dt() : vars[i];
+      stp.vm = params.step(t).has_vm() ? params.step(t).vm() : vars[i];
 
       switch(params.step(t).dtype()) {
 

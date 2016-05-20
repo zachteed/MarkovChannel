@@ -1,10 +1,14 @@
 solver_mode: SIMULATED_ANNEALING
 simulation_mode: EXPM
 
-node_penality: 0.0001
+protocol_list: "data/protocol_list.txt"
+
+node_penality: 0.0003
 edge_penality: 0.0002
 
 model_param {
+
+  n_prms: 3
 
   min_states: 3
   max_states: 10
@@ -16,6 +20,7 @@ model_param {
     add_node: 0.1
     rm_edge: 0.1
     rm_node: 0.1
+
     update_std: 0.2
     update_prob: 0.2
   }
@@ -23,10 +28,16 @@ model_param {
 }
 
 sa_param {
+
   k_max: 100000
-  n_chains: 10
-  step: 1000
+  n_chains: 50
+  step: 500
   gamma: 0.9
   t0: 0.001
-  display: 1000
+  display: 200
+  restart: 0.0002
+
+  snapshot: 2000
+  snapshotdir: "snapshots"
+
 }

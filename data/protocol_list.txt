@@ -1,3 +1,5 @@
-gv.prototxt
-inac.prototxt
-rise.prototxt
+data/protocols/gv.prototxt
+data/protocols/inac.prototxt
+data/protocols/rise.prototxt
+data/protocols/trace_-10mV.prototxt
+data/protocols/fall.prototxt

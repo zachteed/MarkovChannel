@@ -57,7 +57,7 @@ message SolverParameter {
   optional SimulationMode simulation_mode = 2 [default = ODE];
 
   required ModelParameter model_param = 3;
-  required string protocols = 4;
+  required string protocol_list = 4;
 
   optional double node_penality = 5 [default = 1.0];
   optional double edge_penality = 6 [default = 1.0];
@@ -114,7 +114,9 @@ message SAParameter {
   optional int32 display = 5 [default = 100];
   optional int32 n_chains = 6 [default = 100];
   optional double restart = 7 [default = 0.001];
+  
   optional int32 snapshot = 8 [default = 1000];
+  optional string snapshotdir = 9 [default = 'snapshots'];
 
 }
 

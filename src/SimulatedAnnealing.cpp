@@ -4,6 +4,10 @@
 #include <string>
 #include <math.h>
 
+#include <string>
+#include <sstream>
+#include <fstream>
+
 using namespace std;
 
 
@@ -15,7 +19,9 @@ namespace SimulatedAnnealing
     const int k_max = params.k_max();
     const int step = params.step();
     const int display = params.display();
+
     const int snapshot = params.snapshot();
+    const string snapshotdir = params.snapshotdir();
 
     const double gamma = params.gamma();
     const double restart = params.restart();
@@ -92,6 +98,18 @@ namespace SimulatedAnnealing
       if ( i % params.display() == 0 ) {
         printf("Iteration %6i   Loss %8.8f\n", i, fmin_val);
         // std::cout << *fmin_model << endl; cost(fmin_model, 1);
+      }
+
+      if ( i % snapshot == 0 ) {
+        ostringstream iss; string snapshot_file;
+        iss << snapshotdir << "/iter_" << i << ".model";
+        snapshot_file = iss.str();
+
+        cout << snapshot_file << endl;
+
+        ofstream fss(snapshot_file.c_str());
+        fss << *fmin_model << endl;
+        fss.close();
       }
     }
   }
