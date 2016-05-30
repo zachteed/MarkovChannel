@@ -6,5 +6,5 @@ normalize: true
 step {
   dt: 2.5
   stype: PEAK
-  stepsize: 0.1
+  stepsize: 0.05
 }

@@ -11,14 +11,14 @@ using namespace MarkovChannel;
 using namespace std;
 
 
-void print_matrix(double* A, int n, int m) {
-  for (int i=0; i<n; i++) {
-    for (int j=0; j<m; j++) {
-      printf("%8.4f\t", A[i*m+j]);
-    }
-    printf("\n");
-  }
-}
+// void print_matrix(double* A, int n, int m) {
+//   for (int i=0; i<n; i++) {
+//     for (int j=0; j<m; j++) {
+//       printf("%8.4f\t", A[i*m+j]);
+//     }
+//     printf("\n");
+//   }
+// }
 
 
 extern "C" {
@@ -104,19 +104,11 @@ int step_ode(Model::Model& m, vector<Step>& steps,
   double* Q = &y[N];
   void* params[2] = {(void*) &N, (void*) &Q};
 
-
-  // if ( N != 6 )
-  //   std::cout << m << std::endl;
-
-  // std::cout << N << std::endl;
-
-  //
-  // ode_struct params; params.N = N; params.Q = Q;
   gsl_odeiv2_system sys = {func, jac, N, &params};
-
   gsl_odeiv2_driver * d =
-    gsl_odeiv2_driver_alloc_y_new (&sys, gsl_odeiv2_step_rk8pd,
-				  1e-6, 1e-6, 0.0);
+    gsl_odeiv2_driver_alloc_y_new (&sys, gsl_odeiv2_step_rkf45,
+				  1e-5, 1e-6, 0.0);
+  gsl_odeiv2_driver_set_hmin(d, 1e-6);
 
   for ( int i=0; i<steps.size(); i++ ) {
 
@@ -166,7 +158,6 @@ int step_ode(Model::Model& m, vector<Step>& steps,
           out.push_back(vals[j]);
         }
       }
-
       free(vals);
     }
   }
@@ -320,9 +311,63 @@ double cost(Model::Model& m, ChannelProtocol& proto,
 
 double model_penality(Model::Model& m, SolverParameter& sparam)
 {
-  double penality = 0;
-  penality += sparam.node_penality() * m.n_states();
-  penality += sparam.edge_penality() * m.n_edges();
+  double rcond, anorm, penality = 0;
+  int N = m.n_states(), E = m.n_edges();
+
+  penality += sparam.node_penality() * N;
+  penality += sparam.edge_penality() * E;
+
+  double *Q = (double*) malloc(N*N*sizeof(double));
+  double *wr = (double*) malloc(N*sizeof(double));
+  double *wi = (double*) malloc(N*sizeof(double));
+
+  int idmax, idmin;
+
+  for (double vm = -120; vm <= 40; vm += 20) {
+
+    Model::transition_matrix(m, vm, Q);
+
+    // cout << endl;
+    // print_matrix(Q, N, N);
+    // cout << endl;
+
+
+    LAPACKE_dgeev( LAPACK_ROW_MAJOR,
+      'N', 'N', N, Q, N, wr, wi, NULL, N, NULL, N );
+
+    idmax = cblas_idamax(N, wr, 1);
+    idmin = cblas_idamin(N, wr, 1);
+
+    penality += 0.00001 * ((wr[idmax]<0) ? -wr[idmax] : wr[idmax]);
+
+    // cout << wr[idmax] << "\t" << wr[idmin] << endl;
+    //
+    // double stiffness = wr[idmax] / wr[idmin];
+    // std::cout << stiffness << "\t" << log(stiffness) << endl;
+
+
+    // // LAPACKE_dgees (LAPACK_ROW_MAJOR,
+    // //   'N', 'N', NULL, N, Q, N, &sdim, wr, wi, vs, 1);
+    // for (int i=0; i<N; i++) printf("%8.4f\t", wi[i]);
+    // printf("\n");
+  }
+
+
+
+  free(Q); free(wr); free(wi);
+
+  // for (double vm = -120; vm <= 40; vm += 20) {
+  //
+  //   Model::transition_matrix(m, vm, Q);
+  //
+  //   anorm = LAPACKE_dlange ( LAPACK_ROW_MAJOR, '1', N, N, Q, N);
+  //   LAPACKE_dgetrf ( LAPACK_ROW_MAJOR, N, N, Q, N, ipiv );
+  //   LAPACKE_dgecon( LAPACK_ROW_MAJOR, '1', N, Q, N, anorm, &rcond );
+  //   penality += -0.0001 * log(rcond);
+  //
+  //
+  // }
+
   return penality;
 }
 

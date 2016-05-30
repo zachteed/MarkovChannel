@@ -104,18 +104,17 @@ namespace Model {
       n->rs[i] += r[i];
     }
 
-/*
-
     Math::rng_uniform(N, mult);
     Math::rng_gaussian(N, r, 0, 0.1);
 
     for (int i=1; i<N; i++) {
       if (mult[i] < 0.05) {
         n->C[i] += r[i];
-        n->C[i] = min(1.0, max(0.0, n->C[i]));
+        if (n->C[i] < 0) n->C[i] = 0;
+        if (n->C[i] > 1) n->C[i] = 1;
       }
     }
-*/
+
     free(mult); free(r); return n;
 
 
@@ -246,7 +245,7 @@ namespace Model {
   double* initial_state(Model& m, double vm, double* s)
   {
 
-    double var[] = {1, vm/100, tanh((vm+20)/50)};
+    double var[] = {1, vm/100, tanh((vm+20)/50.0)};
     int i, N=m.G.N, P=prms.n_prms();
 
     cblas_dgemv(CblasRowMajor, CblasNoTrans, N, P,
@@ -285,7 +284,7 @@ namespace Model {
   double* transition_matrix(Model& m, double vm, double* Q)
   {
 
-    double var[] = {1, vm/100, tanh((vm+20)/50)};
+    double var[] = {1, vm/100, tanh((vm+20)/50.0)};
     int i, N=m.G.N, E=m.G.E, P=prms.n_prms();
 
     double *r_vec = rate_vector(m);
@@ -311,7 +310,27 @@ namespace Model {
     int N=m.G.N, E=m.G.E, P=prms.n_prms(), n;
     os << "Model Id:\t" << m.id << "\n" << m.G;
 
+    Graph::Graph G = m.G;
     char buffer[12];
+
+    double* ic = (double*) calloc(2*G.E*G.N, sizeof(double));
+    for(int i=0; i<G.E; i++) {
+      Graph::Edge& e = G.edges[i];
+      ic[2*G.E*e.V1 + 2*i] = -1;
+      ic[2*G.E*e.V2 + 2*i] = 1;
+      ic[2*G.E*e.V1 + 2*i+1] = 1;
+      ic[2*G.E*e.V2 + 2*i+1] = -1;
+    }
+    for (int i=0; i<G.N; i++) {
+      for (int j=0; j<2*G.E; j++) {
+        n = sprintf(buffer, "%4.2f\t", ic[i*2*G.E+j]);
+        os << std::string(buffer, n);
+      }
+      os << "\n";
+    }
+    free(ic);
+
+
 
     os << "\n~RS~" << std::endl;
     for (int i=0; i<N; i++) {

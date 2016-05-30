@@ -1,0 +1,6 @@
+*.model
+*.png
+MarkovChannel
+*.pb.h
+*.pb.cc
+experiments/log

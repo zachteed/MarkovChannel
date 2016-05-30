@@ -47,6 +47,16 @@ int print_ic (Graph::Graph& G)
   free(ic);
 }
 
+void print_mat (double* A, int n, int m) {
+  for (int i=0; i<n; i++) {
+    for (int j=0; j<m; j++) {
+      printf("%8.4f\t", A[i*m+j]);
+    }
+    printf("\n");
+  }
+}
+
+
 MarkovChannel::SolverParameter solver_param;
 vector<ChannelProtocol> protos;
 
@@ -72,6 +82,7 @@ void load_protocols(std::string& protolst)
 int main(int argc, char* argv[])
 {
 
+  // google told me to do this
   GOOGLE_PROTOBUF_VERIFY_VERSION;
   Math::init_stream(time(NULL));
 
@@ -85,11 +96,10 @@ int main(int argc, char* argv[])
   cout << proto_list << endl;
   load_protocols(proto_list);
 
-
   MarkovChannel::SAParameter sa_param = solver_param.sa_param();
   SimulatedAnnealing::solve(cost_f, sa_param);
 
-
+  // google told me to do this too
   google::protobuf::ShutdownProtobufLibrary();
   exit(0);
 

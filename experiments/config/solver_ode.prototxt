@@ -1,5 +1,5 @@
 solver_mode: SIMULATED_ANNEALING
-simulation_mode: EXPM
+simulation_mode: ODE
 
 protocol_list: "data/protocol_list.txt"
 

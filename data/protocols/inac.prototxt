@@ -12,5 +12,5 @@ step {
   dt: 2.5
   vm: -20
   stype: PEAK
-  stepsize: 0.1
+  stepsize: 0.05
 }

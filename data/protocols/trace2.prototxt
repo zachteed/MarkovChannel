@@ -1,7 +1,7 @@
 name: "trace_-10mV"
-source: "data/data/trace_-10mV.txt"
+source: "data/data/trace2.txt"
 v0: -120.0
-normalize: false
+normalize: true
 
 step {
   vm: -10

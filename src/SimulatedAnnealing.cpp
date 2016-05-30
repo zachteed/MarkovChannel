@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <math.h>
+#include <time.h>
 
 #include <string>
 #include <sstream>
@@ -15,6 +16,7 @@ namespace SimulatedAnnealing
 {
   void solve(cost_function cost, MarkovChannel::SAParameter& params)
   {
+
     const int n_chains = params.n_chains();
     const int k_max = params.k_max();
     const int step = params.step();
@@ -34,6 +36,8 @@ namespace SimulatedAnnealing
 
     vector<double> f_val(n_chains, 1e12);
     vector<double> f_min(n_chains, 1e12);
+
+    clock_t start = clock();
 
     #pragma omp parallel for
     for ( int i=0; i<n_chains; i++ ) {
@@ -95,8 +99,12 @@ namespace SimulatedAnnealing
         }
       }
 
+      char buffer[100]; int nc;
+
       if ( i % params.display() == 0 ) {
-        printf("Iteration %6i   Loss %8.8f\n", i, fmin_val);
+        double time_elap = (double)(clock() - start)/CLOCKS_PER_SEC;
+        nc = sprintf(buffer, "%8i\t%8.8f\t%8.2f", i, fmin_val, time_elap);
+        std::cout << std::string(buffer, nc) << std::endl;
         // std::cout << *fmin_model << endl; cost(fmin_model, 1);
       }
 
@@ -105,12 +113,11 @@ namespace SimulatedAnnealing
         iss << snapshotdir << "/iter_" << i << ".model";
         snapshot_file = iss.str();
 
-        cout << snapshot_file << endl;
-
         ofstream fss(snapshot_file.c_str());
         fss << *fmin_model << endl;
         fss.close();
       }
     }
+    std::cout << *fmin_model << endl; cost(fmin_model, 1);
   }
 }

@@ -5,9 +5,9 @@ normalize: false
 weight: 2.0
 
 step {
-  dt: 1.2
+  dt: 1.6
   stype: TAU
-  stepsize: 0.05
+  stepsize: 0.02
   extra_args: 0.1
   extra_args: 0.9
 }

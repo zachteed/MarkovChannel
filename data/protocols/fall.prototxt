@@ -2,12 +2,12 @@ name: "fall_wt"
 source: "data/data/fall.txt"
 v0: -120.0
 normalize: false
-weight: 0.0
+weight: 0.02
 
 step {
   dt: 6.0
   stype: TAU
   stepsize: 0.05
   extra_args: 0.9
-  extra_args: 0.25
+  extra_args: 0.2
 }
