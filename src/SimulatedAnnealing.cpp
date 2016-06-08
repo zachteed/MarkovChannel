@@ -118,6 +118,5 @@ namespace SimulatedAnnealing
         fss.close();
       }
     }
-    std::cout << *fmin_model << endl; cost(fmin_model, 1);
   }
 }

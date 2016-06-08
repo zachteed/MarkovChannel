@@ -93,7 +93,6 @@ int main(int argc, char* argv[])
   Model::prms = solver_param.model_param(); delete input;
 
   std::string proto_list = solver_param.protocol_list();
-  cout << proto_list << endl;
   load_protocols(proto_list);
 
   MarkovChannel::SAParameter sa_param = solver_param.sa_param();
