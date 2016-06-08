@@ -16,10 +16,10 @@ model_param {
   std: 2
 
   mutation {
-    add_edge: 0.1
-    add_node: 0.1
-    rm_edge: 0.1
-    rm_node: 0.1
+    add_edge: 0.00
+    add_node: 0.00
+    rm_edge: 0.00
+    rm_node: 0.00
 
     update_std: 0.2
     update_prob: 0.2
@@ -29,10 +29,10 @@ model_param {
 
 sa_param {
 
-  k_max: 5000
+  k_max: 10000
   n_chains: 50
   step: 500
-  gamma: 0.8
+  gamma: 0.9
   t0: 0.002
   display: 50
   restart: 0.0001
