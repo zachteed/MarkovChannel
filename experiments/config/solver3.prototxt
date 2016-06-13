@@ -3,9 +3,9 @@ simulation_mode: EXPM
 
 protocol_list: "data/protocol_list.txt"
 
-node_penality: 0.0004
+node_penality: 0.0003
 edge_penality: 0.0002
-eig_penality: 0.000001
+eig_penality: 0.00005
 
 model_param {
 
@@ -31,14 +31,14 @@ model_param {
 sa_param {
 
   k_max: 10000
-  n_chains: 50
+  n_chains: 20
   step: 500
-  gamma: 0.9
+  gamma: 0.8
   t0: 0.002
   display: 50
   restart: 0.0001
 
-  snapshot: 1000
+  snapshot: 2000
   snapshotdir: "snapshots"
 
 }

@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
 
 #include <fcntl.h>
 #include <google/protobuf/io/coded_stream.h>
@@ -19,6 +20,8 @@
 #include <google/protobuf/text_format.h>
 
 using namespace std;
+using namespace MarkovChannel;
+
 using google::protobuf::io::FileInputStream;
 using google::protobuf::io::FileOutputStream;
 using google::protobuf::io::ZeroCopyInputStream;
@@ -61,9 +64,9 @@ MarkovChannel::SolverParameter solver_param;
 vector<ChannelProtocol> protos;
 
 
-double cost_f(Model::Model* m, bool print)
+double cost_f(Model::Model* m, ostream* os)
 {
-  return cost(*m, protos, solver_param, print);
+  return cost(*m, protos, solver_param, os);
 }
 
 void load_protocols(std::string& protolst)
@@ -76,7 +79,6 @@ void load_protocols(std::string& protolst)
     protos.push_back(ChannelProtocol(line));
   }
 }
-
 
 
 int main(int argc, char* argv[])
@@ -95,12 +97,12 @@ int main(int argc, char* argv[])
   std::string proto_list = solver_param.protocol_list();
   load_protocols(proto_list);
 
+  vector<Model::Model*> models;
   MarkovChannel::SAParameter sa_param = solver_param.sa_param();
   SimulatedAnnealing::solve(cost_f, sa_param);
 
   // google told me to do this too
   google::protobuf::ShutdownProtobufLibrary();
   exit(0);
-
 
 }

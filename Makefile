@@ -10,7 +10,7 @@ FORT = gfortran
 
 PROTOC = protoc
 
-CFLAGS = $(INCLUDE_DIRS) -m64 -D USE_MKL -pg
+CFLAGS = $(INCLUDE_DIRS) -m64 -D USE_MKL
 
 LFLAGS = -L$(MKLROOT)/lib/intel64 -L/opt/intel/lib/intel64 -L/usr/local/lib/
 

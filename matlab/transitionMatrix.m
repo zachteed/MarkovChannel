@@ -1,12 +1,15 @@
-function [ Q ] = transition_matrix( model , vm )
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+function [ Q ] = transitionMatrix( model , vm )
 
 ic = model.ic;
 rs = model.rs;
 rk = model.rk;
 
-args = [1; vm/100; tanh((vm+20)/50.0)];
+if ( size(rs, 2) == 3 )
+  args = [1; vm/100; tanh((vm+20)/50.0)];
+else
+  args = [1; vm /100];
+end
+
 N = size(rs, 1);
 E = size(rk, 1);
 
@@ -19,4 +22,3 @@ r_vec = exp(D^-1 * [ic(:, 1:2:end)'*rs; rk] * args);
 Q = ic * diag(r_vec(:)) * (-min(ic, 0)');
 
 end
-

@@ -217,7 +217,7 @@ namespace Model {
 
     Math::rng_uniform(N, mult);
     Math::rng_gaussian(N, r, 0, 0.1);
-
+/*
     for (int i=1; i<N; i++) {
       if (mult[i] < 0.05) {
         n->C[i] += r[i];
@@ -225,7 +225,7 @@ namespace Model {
         if (n->C[i] > 1) n->C[i] = 1;
       }
     }
-
+*/
     n->id = Model::Model::count++;
     free(mult); free(r); return n;
 

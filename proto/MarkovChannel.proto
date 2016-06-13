@@ -61,9 +61,10 @@ message SolverParameter {
 
   optional double node_penality = 5 [default = 1.0];
   optional double edge_penality = 6 [default = 1.0];
+  optional double eig_penality = 7 [default = 0.0];
 
-  optional GAParameter ga_param = 7;
-  optional SAParameter sa_param = 8;
+  optional GAParameter ga_param = 8;
+  optional SAParameter sa_param = 9;
 
 }
 

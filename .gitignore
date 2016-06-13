@@ -4,3 +4,4 @@ MarkovChannel
 *.pb.h
 *.pb.cc
 experiments/log
+snapshots/*

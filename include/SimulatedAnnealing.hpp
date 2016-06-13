@@ -6,9 +6,11 @@
 #include "Model.hpp"
 #include "math_functions.hpp"
 
+#include <vector>
+#include <string>
 
 
-typedef double (*cost_function)(Model::Model*, bool);
+typedef double (*cost_function)(Model::Model*, std::ostream*);
 
 namespace SimulatedAnnealing
 {

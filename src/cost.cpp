@@ -7,19 +7,10 @@
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_odeiv2.h>
 
+#include <sstream>
+
 using namespace MarkovChannel;
 using namespace std;
-
-
-// void print_matrix(double* A, int n, int m) {
-//   for (int i=0; i<n; i++) {
-//     for (int j=0; j<m; j++) {
-//       printf("%8.4f\t", A[i*m+j]);
-//     }
-//     printf("\n");
-//   }
-// }
-
 
 extern "C" {
   void dgpadm_(int* ideg, int* m, double* t, double* H, int* ldh,
@@ -250,7 +241,7 @@ int step_exp(Model::Model& m, vector<Step>& steps,
 
 
 double cost(Model::Model& m, ChannelProtocol& proto,
-  SolverParameter sparam, bool print=false)
+  SolverParameter sparam, ostream* os = NULL)
 {
   std::vector<double> output;
   int ierr, N = m.n_states();
@@ -290,13 +281,15 @@ double cost(Model::Model& m, ChannelProtocol& proto,
     }
   }
 
-  if (print) {
-    printf("%s\n", proto.params.name().c_str());
-    for (int i = 0; i < output.size(); i++) {
-      printf("%8.4f\t%8.4f\n", output[i], proto.data[i]);
+  if ( os ) {
+    *os << proto.params.name() << endl; char buffer[32]; int nc;
+    for ( int i=0; i<output.size(); i++ ) {
+      nc = sprintf(buffer, "%8.4f\t%8.4f\n", output[i], proto.data[i]);
+      *os << std::string(buffer, nc);
     }
-    printf("\n");
+    *os << endl;
   }
+
 
   for (int i = 0; i < output.size(); i++) {
     dx = output[i] - proto.data[i];
@@ -304,7 +297,10 @@ double cost(Model::Model& m, ChannelProtocol& proto,
   }
 
   free(y0); free(y);
-  if (isnan(err)) return 1e6;
+  
+  if (isnan(err)) 
+    return 1e6;
+  
   return err;
 }
 
@@ -327,57 +323,28 @@ double model_penality(Model::Model& m, SolverParameter& sparam)
 
     Model::transition_matrix(m, vm, Q);
 
-    // cout << endl;
-    // print_matrix(Q, N, N);
-    // cout << endl;
-
-
     LAPACKE_dgeev( LAPACK_ROW_MAJOR,
       'N', 'N', N, Q, N, wr, wi, NULL, N, NULL, N );
 
     idmax = cblas_idamax(N, wr, 1);
     idmin = cblas_idamin(N, wr, 1);
 
-    penality += 0.00001 * ((wr[idmax]<0) ? -wr[idmax] : wr[idmax]);
+    penality += sparam.eig_penality() * ((wr[idmax]<0) ? -wr[idmax] : wr[idmax]);
 
-    // cout << wr[idmax] << "\t" << wr[idmin] << endl;
-    //
-    // double stiffness = wr[idmax] / wr[idmin];
-    // std::cout << stiffness << "\t" << log(stiffness) << endl;
-
-
-    // // LAPACKE_dgees (LAPACK_ROW_MAJOR,
-    // //   'N', 'N', NULL, N, Q, N, &sdim, wr, wi, vs, 1);
-    // for (int i=0; i<N; i++) printf("%8.4f\t", wi[i]);
-    // printf("\n");
   }
 
-
-
   free(Q); free(wr); free(wi);
-
-  // for (double vm = -120; vm <= 40; vm += 20) {
-  //
-  //   Model::transition_matrix(m, vm, Q);
-  //
-  //   anorm = LAPACKE_dlange ( LAPACK_ROW_MAJOR, '1', N, N, Q, N);
-  //   LAPACKE_dgetrf ( LAPACK_ROW_MAJOR, N, N, Q, N, ipiv );
-  //   LAPACKE_dgecon( LAPACK_ROW_MAJOR, '1', N, Q, N, anorm, &rcond );
-  //   penality += -0.0001 * log(rcond);
-  //
-  //
-  // }
 
   return penality;
 }
 
 
 double cost(Model::Model& m, vector<ChannelProtocol>& protos,
-  SolverParameter& sparam, bool print)
+  SolverParameter& sparam, ostream* os)
 {
   double error = 0;
   for ( int i = 0; i < protos.size(); i++ ) {
-    error += protos[i].params.weight() * cost(m, protos[i], sparam, print);
+    error += protos[i].params.weight() * cost(m, protos[i], sparam, os);
   }
   return  error + model_penality(m, sparam);
 }

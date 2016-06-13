@@ -43,7 +43,7 @@ namespace SimulatedAnnealing
     for ( int i=0; i<n_chains; i++ ) {
       models[i] = new Model::Model(Math::rng_int(3, 10));
       argmin[i] = new Model::Model(models[i]);
-      f_val[i] = cost(models[i], 0); f_min[i] = f_val[i];
+      f_val[i] = cost(models[i], NULL); f_min[i] = f_val[i];
     }
 
     Model::Model* fmin_model = new Model::Model(models[0]);
@@ -68,7 +68,7 @@ namespace SimulatedAnnealing
 
         // generate a random neighbor and compute cost
         Model::Model* neighbor = Model::neighbor(models[j]);
-        double fn = cost(neighbor, 0);
+        double fn = cost(neighbor, NULL);
 
         // use Metroplis-Hasting energy acceptance
         if ( Math::rng_uniform() < exp(-(fn - f_val[j])/T) ) {
@@ -103,9 +103,8 @@ namespace SimulatedAnnealing
 
       if ( i % params.display() == 0 ) {
         double time_elap = (double)(clock() - start)/CLOCKS_PER_SEC;
-        nc = sprintf(buffer, "%8i\t%8.8f\t%8.2f", i, fmin_val, time_elap);
+        nc = sprintf(buffer, "%8i\t%8.8f\t%8.2f", i, cost(fmin_model, NULL), time_elap);
         std::cout << std::string(buffer, nc) << std::endl;
-        // std::cout << *fmin_model << endl; cost(fmin_model, 1);
       }
 
       if ( i % snapshot == 0 ) {
@@ -113,9 +112,16 @@ namespace SimulatedAnnealing
         iss << snapshotdir << "/iter_" << i << ".model";
         snapshot_file = iss.str();
 
+        ostringstream mss; string modelfit_file;
+        mss << snapshotdir << "/iter_" << i << ".txt";
+        modelfit_file = mss.str();
+
         ofstream fss(snapshot_file.c_str());
         fss << *fmin_model << endl;
         fss.close();
+
+        ofstream os(modelfit_file.c_str());
+        cost(fmin_model, &os);
       }
     }
   }
