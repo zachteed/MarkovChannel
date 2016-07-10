@@ -14,6 +14,14 @@ message ProtocolParameter {
 
   repeated ProtocolStep step = 7;
 
+  enum DataType {
+    CONDUCTANCE = 0;
+    FLUORIMETRY = 1;
+  }
+
+  optional DataType dtype = 8 [default = CONDUCTANCE];
+
+
 }
 
 message ProtocolStep {
@@ -25,16 +33,11 @@ message ProtocolStep {
     TRACE = 3;
   }
 
-  enum DataType {
-    CONDUCTANCE = 0;
-    FLUORIMETRY = 1;
-  }
 
   optional double dt = 1;
   optional double vm = 2;
 
   optional StepType stype = 3 [default = NONE];
-  optional DataType dtype = 4 [default = CONDUCTANCE];
 
   optional double stepsize = 8 [default = 0.1];
   repeated double extra_args = 9;

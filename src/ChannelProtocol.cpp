@@ -63,12 +63,12 @@ ChannelProtocol::ChannelProtocol(std::string& prototxt)
       stp.dt = params.step(t).has_dt() ? params.step(t).dt() : vars[i];
       stp.vm = params.step(t).has_vm() ? params.step(t).vm() : vars[i];
 
-      switch(params.step(t).dtype()) {
+      switch(params.dtype()) {
 
-        case MarkovChannel::ProtocolStep::CONDUCTANCE:
+        case MarkovChannel::ProtocolParameter::CONDUCTANCE:
           stp.dtype = CONDUCTANCE; break;
 
-        case MarkovChannel::ProtocolStep::FLUORIMETRY:
+        case MarkovChannel::ProtocolParameter::FLUORIMETRY:
           stp.dtype = FLUORIMETRY; break;
 
         default: break;

@@ -196,6 +196,7 @@ int step_exp(Model::Model& m, vector<Step>& steps,
       int n_steps = ceil(dt / steps[i].stepsize);
       double *c_mat = (steps[i].dtype == CONDUCTANCE) ? m.C : m.F;
 
+
       t = steps[i].stepsize;
       dgpadm_(&ideg, &N, &t, H, &N, wsp, &lwsp, ipiv, &iexp, &ns, &iflag);
 
