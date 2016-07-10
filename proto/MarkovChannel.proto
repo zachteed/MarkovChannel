@@ -69,14 +69,23 @@ message SolverParameter {
 }
 
 message ModelParameter {
+
+  enum VoltageDependance {
+    LINEAR = 0;
+    POLY = 1;
+    SIGMOID = 2;
+  }
+
   optional int32 min_states = 1 [default=3];
   optional int32 max_states = 2 [default=10];
+
   optional int32 n_prms = 3 [default=2];
+  optional VoltageDependance vfunc = 4 [default=SIGMOID];
 
-  optional double mu = 4 [default = 0.0];
-  optional double std = 5 [default = 1.0];
+  optional double mu = 5 [default = 0.0];
+  optional double std = 6 [default = 1.0];
 
-  required MutationParameter mutation = 6;
+  required MutationParameter mutation = 7;
 }
 
 message MutationParameter {
@@ -87,6 +96,9 @@ message MutationParameter {
 
   optional double update_std = 5 [default = 0.1];
   optional double update_prob = 6 [default = 0.2];
+
+  optional double g_prob = 7 [default = 0.05];
+  optional double f_prob = 8 [default = 0.05];
 }
 
 message GAParameter {
@@ -115,7 +127,7 @@ message SAParameter {
   optional int32 display = 5 [default = 100];
   optional int32 n_chains = 6 [default = 100];
   optional double restart = 7 [default = 0.001];
-  
+
   optional int32 snapshot = 8 [default = 1000];
   optional string snapshotdir = 9 [default = 'snapshots'];
 

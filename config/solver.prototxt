@@ -24,6 +24,9 @@ model_param {
 
     update_std: 0.2
     update_prob: 0.2
+
+    g_prob: 0.05
+    f_prob: 0.05
   }
 
 }

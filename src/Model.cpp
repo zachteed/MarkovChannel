@@ -75,49 +75,6 @@ namespace Model {
 
   Model* neighbor(Model* m, int num) {
 
-  //   Model* n = new Model();
-  //   n->G = m->G;
-  //
-  //   int N=n->G.N, E=n->G.E, P=prms.n_prms();
-  //   n->rs = (double*) malloc(P*(N+E)*sizeof(double));
-  //   memcpy(n->rs, m->rs, P*(N+E)*sizeof(double));
-  //   n->rk = n->rs + P*N; n->r_vec = NULL;
-  //
-  //   n->C = (double*) calloc(N, sizeof(double));
-  //   n->F = (double*) calloc(N, sizeof(double));
-  //   memcpy(n->C, m->C, N*sizeof(double));
-  //   memcpy(n->F, m->F, N*sizeof(double));
-  //
-  //   n->C[0] = 1; n->F[0] = 1;
-  //
-  //   const MarkovChannel::MutationParameter& mut = prms.mutation();
-  //   double prob=mut.update_prob(), sig=mut.update_std();
-  //
-  //   double* mult = (double*) malloc(P*(N+E)*sizeof(double));
-  //   double* r = (double*) malloc(P*(N+E)*sizeof(double));
-  //
-  //   Math::rng_uniform(P*(N+E), mult);
-  //   Math::rng_gaussian(P*(N+E), r, 0, sig);
-  //
-  //   for(int i=0; i<P*(N+E); i++) {
-  //     r[i] = (mult[i] < prob) ? r[i] : 0;
-  //     n->rs[i] += r[i];
-  //   }
-  //
-  //   Math::rng_uniform(N, mult);
-  //   Math::rng_gaussian(N, r, 0, 0.1);
-  //
-  //   for (int i=1; i<N; i++) {
-  //     if (mult[i] < 0.05) {
-  //       n->C[i] += r[i];
-  //       if (n->C[i] < 0) n->C[i] = 0;
-  //       if (n->C[i] > 1) n->C[i] = 1;
-  //     }
-  //   }
-  //
-  //   free(mult); free(r); return n;
-  // }
-
     Model* n = new Model();
     n->G = m->G; n->r_vec = NULL;
 
@@ -215,19 +172,29 @@ namespace Model {
       n->rs[i] += r[i];
     }
 
-    Math::rng_uniform(N, mult);
-    Math::rng_gaussian(N, r, 0, 0.1);
-/*
-    for (int i=1; i<N; i++) {
-      if (mult[i] < 0.05) {
-        n->C[i] += r[i];
-        if (n->C[i] < 0) n->C[i] = 0;
-        if (n->C[i] > 1) n->C[i] = 1;
+
+    double *gflip = (double*) malloc(N*sizeof(double));
+    double *fflip = (double*) malloc(N*sizeof(double));
+
+    Math::rng_uniform(N, gflip);
+    Math::rng_uniform(N, fflip);
+
+    for (int i = 0; i < N; i++) {
+      if ( gflip[i] < mut.g_prob() ) {
+        n->C[i] = 1.0 - n->C[i];
+      }
+      if ( fflip[i] < mut.f_prob() ) {
+        n->F[i] = 1.0 - n->F[i];
       }
     }
-*/
+
     n->id = Model::Model::count++;
-    free(mult); free(r); return n;
+
+    free(mult);
+    free(r);
+    free(gflip);
+    free(fflip);
+    return n;
 
   }
 

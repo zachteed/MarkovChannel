@@ -297,10 +297,10 @@ double cost(Model::Model& m, ChannelProtocol& proto,
   }
 
   free(y0); free(y);
-  
-  if (isnan(err)) 
+
+  if (isnan(err))
     return 1e6;
-  
+
   return err;
 }
 

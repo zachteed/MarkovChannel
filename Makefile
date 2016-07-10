@@ -18,7 +18,9 @@ LIBS = -lmkl_intel_lp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl -lproto
 
 SRCS = proto/MarkovChannel.pb.cc src/ChannelProtocol.cpp src/math_functions.cpp src/graph_functions.cpp src/Model.cpp src/cost.cpp src/SimulatedAnnealing.cpp src/main.cpp
 
-OBJS = $(SRCS:.c=.o) src/private/dgpadm.f.o
+OBJS = $(SRCS:.c=.o)
+
+FOBJS = src/private/dgpadm.f.o
 
 MAIN = MarkovChannel
 
@@ -33,7 +35,7 @@ MAIN = MarkovChannel
 all:    $(MAIN)
 
 $(MAIN): $(OBJS)
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(FOBJS) $(LFLAGS) $(LIBS)
 
 
 # this is a suffix replacement rule for building .o's from .c's
@@ -44,7 +46,7 @@ $(MAIN): $(OBJS)
 proto/MarkovChannel.pb.cc:
 	$(PROTOC) -I=proto --cpp_out=proto proto/MarkovChannel.proto
 
-.c.o:
+*.c.o:
 	$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
 
 src/private/dgpadm.f.o:
