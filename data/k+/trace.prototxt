@@ -1,0 +1,10 @@
+name: "trace_wt"
+source: "data/k+/trace.dat"
+v0: -80.0
+normalize: true
+
+step {
+  dt: 4.0
+  stype: TAU
+  stepsize: 0.2
+}

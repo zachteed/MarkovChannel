@@ -1,0 +1,12 @@
+name: "rise_wt"
+source: "data/k+/rise.dat"
+v0: -80.0
+normalize: true
+
+step {
+  dt: 4.0
+  stype: TAU
+  stepsize: 0.1
+  extra_args: 0.1
+  extra_args: 0.9
+}
