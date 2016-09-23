@@ -1,7 +1,7 @@
 solver_mode: SIMULATED_ANNEALING
 simulation_mode: EXPM
 
-protocol_list: "data/protocol_list.txt"
+protocol_list: "data/k+_protocol_list.txt"
 
 node_penality: 0.0004
 edge_penality: 0.0002
