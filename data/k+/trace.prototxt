@@ -5,6 +5,6 @@ normalize: true
 
 step {
   dt: 4.0
-  stype: TAU
+  stype: TRACE
   stepsize: 0.2
 }
