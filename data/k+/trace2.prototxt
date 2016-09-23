@@ -5,6 +5,7 @@ normalize: false
 
 step {
   dt: 4.0
+  vm: 20
   stype: TRACE
   stepsize: 0.2
 }
