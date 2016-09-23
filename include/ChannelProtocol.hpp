@@ -1,3 +1,4 @@
+
 #ifndef CHANNEL_PROTOCOL_HPP_
 #define CHANNEL_PROTOCOL_HPP_
 
@@ -9,7 +10,7 @@
 #include <iostream>
 
 
-enum StepType {NONE, PEAK, TAU, TRACE};
+enum StepType {NONE, PEAK, TAU, TRACE, MIN};
 enum DataType {CONDUCTANCE, FLUORIMETRY};
 
 

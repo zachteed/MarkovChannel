@@ -18,9 +18,14 @@ extern "C" {
 }
 
 
-inline double peak(int n, double* x)
+inline double peak(int n, double* x, bool mini=true)
 {
-  int idx = cblas_idamax(n, x, 1);
+  int idx = 0;
+  if (mini) {
+    idx = cblas_idamin(n, x, 1);
+  } else {
+    idx = cblas_idamax(n, x, 1);
+  }
   double res = x[idx]; return res;
 }
 
@@ -144,6 +149,11 @@ int step_ode(Model::Model& m, vector<Step>& steps,
         out.push_back(res);
       }
 
+      else if ( steps[i].stype == MIN ) {
+        double res = peak(n_steps, vals, true);
+        out.push_back(res);
+      }
+
       else if ( steps[i].stype == TRACE ) {
         for ( int j=0; j<n_steps; j++ ) {
           out.push_back(vals[j]);
@@ -224,6 +234,11 @@ int step_exp(Model::Model& m, vector<Step>& steps,
 
       else if ( steps[i].stype == PEAK ) {
         double res = peak(n_steps, vals);
+        out.push_back(res);
+      }
+
+      else if ( steps[i].stype == MIN ) {
+        double res = peak(n_steps, vals, true);
         out.push_back(res);
       }
 

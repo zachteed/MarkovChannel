@@ -88,6 +88,9 @@ ChannelProtocol::ChannelProtocol(std::string& prototxt)
         case MarkovChannel::ProtocolStep::TRACE:
           stp.stype = TRACE; break;
 
+        case MarkovChannel::ProtocolStep::MIN:
+          stp.stype = MIN; break;
+
         default: break;
       }
 

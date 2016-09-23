@@ -31,6 +31,7 @@ message ProtocolStep {
     PEAK = 1;
     TAU = 2;
     TRACE = 3;
+    MIN = 4;
   }
 
 
