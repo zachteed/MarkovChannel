@@ -114,13 +114,102 @@ step {
   stype: NONE
 }
 ```
-is missing the 'vm' argument.  The .dat file is then searched and fills in 'vm' with the values of the first row in the .dat file.  So 'vm' becomes {-120, -110, -100, ..., 20}.
+is missing the 'vm' argument.  The .dat file is then searched and fills in 'vm' with the values of the first column in the .dat file.  So 'vm' becomes {-120, -110, -100, ..., 20}.
+
+In the second step
+```
+step {
+  dt: 2.5
+  vm: -20
+  stype: PEAK
+  stepsizze: 0.05
+}
+```
+
+stype is set to PEAK.  After the first step, vm is variable, and is set to all the values specified in the first row of the .dat file.  The second step then exposes each of these traces to -20mV for 2.5 ms and records the peak conductance.  The stepsize is 0.05, so a 5 microsecond resolution is used to calculate the peak.  The value of the peak conductance for each of these traces is then compared to the second column of the .dat file to compute the protocol error for the simulated model.
+
+Another example protocol can be seen in rise.prototxt
+```
+name: "rise_wt"
+source: "data/data/rise.txt"
+v0: -120.0
+normalize: false
+weight: 2.0
+
+step {
+  dt: 1.6
+  stype: TAU
+  stepsize: 0.02
+  extra_args: 0.1
+  extra_args: 0.9
+}
+```
+
+Here, the extra_args parameters are used.  In this protocol, the amount of time it take each trace to move from .1 to .9 of its peak conductance is measured.
 
 More examples of protocol encodings can be found in the demos folder.
 
 
+Once all protocols have been encoded in the proper format, then you must create a .lst file listing the location of all the desired protocols relative to the path of the .lst file.
 
+Finally, you must specify a solver.prototxt providing the model/solver parameters
+```
+solver_mode: SIMULATED_ANNEALING
+simulation_mode: ODE
 
+protocol_list: "data/protocol_list.txt"
 
+node_penality: 0.0004
+edge_penality: 0.0000
+eig_penality: 0.0001
+
+model_param {
+
+  n_prms: 3
+
+  min_states: 3
+  max_states: 10
+  mu: 0
+  std: 2
+
+  mutation {
+    add_edge: 0.18
+    add_node: 0.05
+    rm_edge: 0.05
+    rm_node: 0.05
+
+    update_std: 0.2
+    update_prob: 0.2
+
+    g_prob: 0.05
+    f_prob: 0.05
+  }
+
+}
+
+sa_param {
+
+  k_max: 200000
+  n_chains: 25
+  step: 500
+  gamma: 0.99
+  t0: 0.0020
+  display: 5000
+  restart: 0.0001
+
+  snapshot: 1000
+  snapshotdir: "snapshots/t2"
+```
+
+The default value of the solver.prototxt works for a wide range of protocol settings.  However, some important paramters include:
+* node_penality - penalize the model for each node
+* edge_penality - penalize the model for each edge
+* eig_peanlity - penalize model stiffness
+* k_max - number of simulated annealing steps
+* gamma - annealing schedule
+* snapshotdir - the directory to write the optimized models (make sure this directory actually exists)
+
+Finally, you can begin fitting the model by running
+* './MarkovChannel solver.prototoxt protocols.lst'
 
 
