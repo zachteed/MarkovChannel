@@ -34,13 +34,13 @@ MarkovChannel is released under the MIT Licensse (refer to the LICENSE file for 
 MarkovChannel comes with two demos; one for a Na<sup>+</sup> channel and one for a K<sup>+</sup> channel.
 
 Before executing either of the examples, you must first set the mkl enviornment variables
-    + run 'source /opt/intel/mkl/bin/mkvars.sh intel64'
+* run 'source /opt/intel/mkl/bin/mkvars.sh intel64'
 
-To execute the Na^+ optimization
-    + run './MarkovChannel solver.prototxt k-protocols.txt'
+To execute the Na<sup>+</sup> optimization
+* run './MarkovChannel solver.prototxt demos/Na+/protocols.lst'
 
-To exectute the K^+ optimization
-    + run './MarkovChannel solver.prototxt na-protocols.txt'
+To exectute the K<sup>+</sup> optimization
+* run './MarkovChannel solver.prototxt demos/K+/protocols.lst'
 
 When running these commands, optimization progress will be periodically displayed.  More detailed information and fitted models will be written to the snapshot directory.
 
