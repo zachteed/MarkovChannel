@@ -56,9 +56,7 @@ Included in MarkovChannel are some MATLAB scripts that can interpret the .model 
 To fit models on other data, you must encode the experimental protocols in the .prototxt format.
 
 For example, the Na+ inactivation protocol is represented as
-
-    ```
-
+    ```Shell
     name: "inac"
     source: "inac.dat"
     v0: -120.0
