@@ -31,16 +31,16 @@ MarkovChannel is released under the MIT Licensse (refer to the LICENSE file for 
 
 ### Running the Demos
 
-MarkovChannel comes with two demos; one for a Na^+ channel and one for a K^+ channel.
+MarkovChannel comes with two demos; one for a Na<sup>+</sup> channel and one for a K<sup>+</sup> channel.
 
 Before executing either of the examples, you must first set the mkl enviornment variables
-    - run 'source /opt/intel/mkl/bin/mkvars.sh intel64'
+    + run 'source /opt/intel/mkl/bin/mkvars.sh intel64'
 
 To execute the Na^+ optimization
-    - run './MarkovChannel solver.prototxt k-protocols.txt'
+    + run './MarkovChannel solver.prototxt k-protocols.txt'
 
 To exectute the K^+ optimization
-    - run './MarkovChannel solver.prototxt na-protocols.txt'
+    + run './MarkovChannel solver.prototxt na-protocols.txt'
 
 When running these commands, optimization progress will be periodically displayed.  More detailed information and fitted models will be written to the snapshot directory.
 
@@ -56,24 +56,24 @@ Included in MarkovChannel are some MATLAB scripts that can interpret the .model 
 To fit models on other data, you must encode the experimental protocols in the .prototxt format.
 
 For example, the Na+ inactivation protocol is represented as
-'''
-name: "inac"
-source: "inac.dat"
-v0: -120.0
-normalize: true
+    ```inac.prototxt
+    name: "inac"
+    source: "inac.dat"
+    v0: -120.0
+    normalize: true
 
-step {
-  dt: 200.0
-  stype: NONE
-}
+    step {
+      dt: 200.0
+      stype: NONE
+    }
 
-step {
-  dt: 2.5
-  vm: -20
-  stype: PEAK
-  stepsizze: 0.05
-}
-'''
+    step {
+      dt: 2.5
+      vm: -20
+      stype: PEAK
+      stepsizze: 0.05
+    }
+```
 
 
 
