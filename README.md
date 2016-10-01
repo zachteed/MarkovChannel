@@ -209,7 +209,6 @@ The default value of the solver.prototxt works for a wide range of protocol sett
 * gamma - annealing schedule
 * snapshotdir - the directory to write the optimized models (make sure this directory actually exists)
 
-Finally, you can begin fitting the model by running
-* './MarkovChannel solver.prototoxt protocols.lst'
+Finally, you can begin fitting the model by running './MarkovChannel solver.prototoxt protocols.lst'
 
 
