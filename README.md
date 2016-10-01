@@ -21,26 +21,26 @@ MarkovChannel is released under the MIT Licensse (refer to the LICENSE file for 
 ### Requirements: software
 
 0. 'Protobuf'
-    - if you are using ubuntu run 'sudo apt-get install libprotobuf-dev protobuf-compiler'
+    - if you are using ubuntu run `sudo apt-get install libprotobuf-dev protobuf-compiler`
 0. 'mkl' Intel Math Kernel Library
     - [mkl](https://software.intel.com/en-us/intel-mkl)
 
 ### Compilation
 
-0. To compile simply run 'make'
+0. To compile simply run `make`
 
 ### Running the Demos
 
 MarkovChannel comes with two demos; one for a Na<sup>+</sup> channel and one for a K<sup>+</sup> channel.
 
 Before executing either of the examples, you must first set the mkl enviornment variables
-* run 'source /opt/intel/mkl/bin/mkvars.sh intel64'
+* run `source /opt/intel/mkl/bin/mkvars.sh intel64`
 
 To execute the Na<sup>+</sup> optimization
-* run './MarkovChannel solver.prototxt demos/Na+/protocols.lst'
+* run `./MarkovChannel solver.prototxt demos/Na+/protocols.lst`
 
 To exectute the K<sup>+</sup> optimization
-* run './MarkovChannel solver.prototxt demos/K+/protocols.lst'
+* run `./MarkovChannel solver.prototxt demos/K+/protocols.lst`
 
 When running these commands, optimization progress will be periodically displayed.  More detailed information and fitted models will be written to the snapshot directory.
 
@@ -209,6 +209,6 @@ The default value of the solver.prototxt works for a wide range of protocol sett
 * gamma - annealing schedule
 * snapshotdir - the directory to write the optimized models (make sure this directory actually exists)
 
-Finally, you can begin fitting the model by running './MarkovChannel solver.prototoxt protocols.lst'
+Finally, you can begin fitting the model by running `./MarkovChannel solver.prototoxt protocols.lst`
 
 
