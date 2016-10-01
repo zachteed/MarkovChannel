@@ -74,6 +74,52 @@ step {
   stepsizze: 0.05
 }
 ```
+with inac.dat
+```
+-120.0000    1.0000
+-110.0000    0.9796
+-100.0000    0.9181
+ -90.0000    0.7607
+ -80.0000    0.4866
+ -70.0000    0.2226
+ -60.0000    0.0800
+ -40.0000    0.0080
+ -20.0000    0.0007
+        0    0.0001
+  20.0000         0
+```
+
+The header contains to following fields
+* name - the name of the protocol
+* source - the data used by the protocol
+* v0 - the initial voltage
+* normalize - whether to normalize output to [0, 1]
+
+The protocol can then consist of any number of steps.  Each step contains the following fields:
+* dt - the duration of the step
+* vm - step voltage
+* stype - the type of step this can be one of the following forms
+	+ NONE - simply perform the step, produce no output
+	+ PEAK - record the peak channel conductance
+	+ MIN - record the minimum channel conductance
+	+ TAU - record rate constants (parameterized by extra_args)
+	+ TRACE - record channel conductance after each stepsize
+* stepsize - optimal parameter for size of ODE/EXPM stepping
+* extra_args - any number of additional step arguments, used for TAU stype
+
+If either 'dt' or 'vm' is missing from the step, then the program treats this value as a variable and searches the .dat file for the missing paramters.  For example, in the inactivation protocol, the first step
+```
+step {
+  dt: 200.0
+  stype: NONE
+}
+```
+is missing the 'vm' argument.  The .dat file is then searched and fills in 'vm' with the values of the first row in the .dat file.  So 'vm' becomes {-120, -110, -100, ..., 20}.
+
+More examples of protocol encodings can be found in the demos folder.
+
+
+
 
 
 
