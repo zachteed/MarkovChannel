@@ -13,9 +13,8 @@ MarkovChannel is released under the MIT Licensse (refer to the LICENSE file for 
 0. [Requirements: software](#requirements-software)
 0. [Compilation](#compilation)
 0. [Running the Demos](#running-the-demos)
-0. [Understanding the Results](#understanding-to-results)
+0. [Understanding the Results](#understanding-the-results)
 0. [Training on Other Data](#training-on-other-data)
-0. [Troubleshooting](#troubleshooting)
 
 
 ### Requirements: software
