@@ -1,7 +1,0 @@
-data/protocols/gv.prototxt
-data/protocols/inac.prototxt
-data/protocols/rise.prototxt
-data/protocols/trace_-10mV.prototxt
-data/protocols/trace2.prototxt
-data/protocols/fall.prototxt
-data/protocols/recovery.prototxt

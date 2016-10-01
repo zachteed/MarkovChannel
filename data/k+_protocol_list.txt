@@ -1,6 +1,0 @@
-data/k+/trace40.prototxt
-data/k+/trace00.prototxt
-data/k+/trace-20.prototxt
-data/k+/gv.prototxt
-data/k+/rise.prototxt
-data/k+/deact.prototxt
