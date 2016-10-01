@@ -18,7 +18,7 @@ extern "C" {
 }
 
 
-inline double peak(int n, double* x, bool mini=true)
+inline double peak(int n, double* x, bool mini=false)
 {
   int idx = 0;
   if (mini) {

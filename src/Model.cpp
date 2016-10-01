@@ -172,7 +172,7 @@ namespace Model {
       n->rs[i] += r[i];
     }
 
-
+/*
     double *gflip = (double*) malloc(N*sizeof(double));
     double *fflip = (double*) malloc(N*sizeof(double));
 
@@ -187,13 +187,13 @@ namespace Model {
         n->F[i] = 1.0 - n->F[i];
       }
     }
-
+*/
     n->id = Model::Model::count++;
 
     free(mult);
     free(r);
-    free(gflip);
-    free(fflip);
+//    free(gflip);
+//    free(fflip);
     return n;
 
   }

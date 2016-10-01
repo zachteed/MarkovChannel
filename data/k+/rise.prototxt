@@ -1,7 +1,8 @@
 name: "rise_wt"
 source: "data/k+/rise.dat"
 v0: -80.0
-normalize: true
+normalize: false
+weight: 0.6
 
 step {
   dt: 4.0

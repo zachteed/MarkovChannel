@@ -2,6 +2,7 @@ name: "deact_wt"
 source: "data/k+/deact.dat"
 v0: -80.0
 normalize: true
+weight: 0.6
 
 step {
   dt: 2.0

@@ -1,11 +1,11 @@
 solver_mode: SIMULATED_ANNEALING
-simulation_mode: EXPM
+simulation_mode: ODE
 
-protocol_list: "data/k+_protocol_list.txt"
+protocol_list: "data/protocol_list.txt"
 
 node_penality: 0.0004
-edge_penality: 0.0002
-eig_penality: 0.000001
+edge_penality: 0.0000
+eig_penality: 0.0001
 
 model_param {
 
@@ -17,7 +17,7 @@ model_param {
   std: 2
 
   mutation {
-    add_edge: 0.05
+    add_edge: 0.18
     add_node: 0.05
     rm_edge: 0.05
     rm_node: 0.05
@@ -33,15 +33,15 @@ model_param {
 
 sa_param {
 
-  k_max: 10000
-  n_chains: 50
+  k_max: 200000
+  n_chains: 25
   step: 500
-  gamma: 0.9
-  t0: 0.002
-  display: 50
+  gamma: 0.99
+  t0: 0.0020
+  display: 5000
   restart: 0.0001
 
   snapshot: 1000
-  snapshotdir: "snapshots"
+  snapshotdir: "snapshots/t2"
 
 }
