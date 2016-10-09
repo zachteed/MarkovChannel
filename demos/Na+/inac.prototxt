@@ -1,5 +1,5 @@
 name:     "inac"
-source:   "data/data/inac.txt"
+source:   "inac.dat"
 v0:       -120.0
 normalize: true
 

@@ -1,5 +1,5 @@
 name: "trace_-10mV"
-source: "data/data/trace_-10mV.txt"
+source: "trace_-10mV.dat"
 v0: -120.0
 normalize: false
 

@@ -1,5 +1,5 @@
 name: "gv_wt"
-source: "data/data/gv.txt"
+source: "gv.dat"
 v0: -120.0
 normalize: true
 

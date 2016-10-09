@@ -61,8 +61,6 @@ message SolverParameter {
   optional SimulationMode simulation_mode = 2 [default = ODE];
 
   required ModelParameter model_param = 3;
-  required string protocol_list = 4;
-
   optional double node_penality = 5 [default = 1.0];
   optional double edge_penality = 6 [default = 1.0];
   optional double eig_penality = 7 [default = 0.0];

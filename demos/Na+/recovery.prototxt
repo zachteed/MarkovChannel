@@ -1,5 +1,5 @@
 name:     "recovery"
-source:   "data/data/recovery.txt"
+source:   "recovery.dat"
 v0:       -120.0
 normalize: true
 

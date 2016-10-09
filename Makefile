@@ -55,6 +55,8 @@ src/private/dgpadm.f.o:
 
 clean:
 	$(RM) *.o *~ $(MAIN)
+	$(RM) proto/*.pb.h
+	$(RM) proto/*.pb.cc
 
 depend: $(SRCS)
 	makedepend $(INCLUDES) $^

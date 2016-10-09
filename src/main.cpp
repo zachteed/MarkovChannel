@@ -11,6 +11,7 @@
 #include <vector>
 #include <cstdlib>
 #include <stdio.h>
+#include <limits.h>
 #include <math.h>
 #include <time.h>
 
@@ -69,14 +70,23 @@ double cost_f(Model::Model* m, ostream* os)
   return cost(*m, protos, solver_param, os);
 }
 
-void load_protocols(std::string& protolst)
+void load_protocols(char *protolst)
 {
+  char datapath[PATH_MAX+1];
+  realpath(protolst, datapath);
   std::ifstream protofile;
-  protofile.open(protolst.c_str());
+  protofile.open(protolst);
+
+  std::string p1(datapath);
+  int i = p1.size() - 1;
+  while (p1[i] != '/') i--;
+  std::string pth = p1.substr(0, i+1);
 
   std::string line;
   while ( protofile >> line ) {
-    protos.push_back(ChannelProtocol(line));
+    std::cout << pth+line << std::endl;
+    std::string proto_file = pth + line;
+    protos.push_back(ChannelProtocol(proto_file));
   }
 }
 
@@ -93,9 +103,7 @@ int main(int argc, char* argv[])
 
   google::protobuf::TextFormat::Parse(input, &solver_param);
   Model::prms = solver_param.model_param(); delete input;
-
-  std::string proto_list = solver_param.protocol_list();
-  load_protocols(proto_list);
+  load_protocols(argv[2]);
 
   vector<Model::Model*> models;
   MarkovChannel::SAParameter sa_param = solver_param.sa_param();

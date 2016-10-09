@@ -1,8 +1,10 @@
 #include "ChannelProtocol.hpp"
-#include <fcntl.h>
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/text_format.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <string.h>
 
 using namespace std;
 
@@ -21,8 +23,18 @@ ChannelProtocol::ChannelProtocol(std::string& prototxt)
   FileInputStream* input = new FileInputStream(fd);
   google::protobuf::TextFormat::Parse(input, &params);
 
+  char datpath[PATH_MAX+1];
+  realpath(prototxt.c_str(), datpath);
+  int i = strlen(datpath)-1;
+  while (datpath[i] != '/') i--;
+
+  std::string pth =
+    std::string(datpath).substr(0, i+1) + params.source();
+
+  std::cout << pth << std::endl;
+
   std::ifstream datfile;
-  datfile.open(params.source().c_str());
+  datfile.open(pth.c_str());
 
   if (!datfile) {
     std::cerr << "Unable to Open Source:\t" << params.source() << std::endl;
