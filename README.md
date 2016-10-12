@@ -23,6 +23,8 @@ MarkovChannel is released under the MIT Licensse (refer to the LICENSE file for 
     - if you are using ubuntu run `sudo apt-get install libprotobuf-dev protobuf-compiler`
 0. 'mkl' Intel Math Kernel Library
     - [mkl](https://software.intel.com/en-us/intel-mkl)
+0. 'gsl' Gnu Scientific Library
+    - [gsl](https://www.gnu.org/software/gsl/)
 
 ### Compilation
 
