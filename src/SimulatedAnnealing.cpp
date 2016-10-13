@@ -124,5 +124,11 @@ namespace SimulatedAnnealing
         cost(fmin_model, &os);
       }
     }
+
+    delete fmin_model;
+    for ( int i=0; i<n_chains; i++ ) {
+      delete models[i];
+      delete argmin[i];
+    }
   }
 }
