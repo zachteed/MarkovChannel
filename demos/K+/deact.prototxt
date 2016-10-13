@@ -1,5 +1,5 @@
 name: "deact_wt"
-source: "data/k+/deact.dat"
+source: "deact.dat"
 v0: -80.0
 normalize: true
 weight: 0.6

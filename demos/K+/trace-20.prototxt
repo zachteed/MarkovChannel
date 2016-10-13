@@ -1,5 +1,5 @@
 name: "trace_wt"
-source: "data/k+/trace-20.dat"
+source: "trace-20.dat"
 v0: -80.0
 normalize: false
 

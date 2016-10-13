@@ -1,5 +1,5 @@
 name: "rise_wt"
-source: "data/k+/rise.dat"
+source: "rise.dat"
 v0: -80.0
 normalize: false
 weight: 0.6
